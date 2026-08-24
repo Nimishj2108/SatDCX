@@ -1,0 +1,8 @@
+{
+  "name": "SATCONNECT",
+  "description": "Bitcoin and Lightning financial infrastructure superlayer delivering universal payment identity, AI route intelligence, UTXO DustGuard, payment firewall, and self-custody risk management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
