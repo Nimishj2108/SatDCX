@@ -15,7 +15,7 @@ import {
 import { SAMPLE_IDENTITIES } from '../data/mockData';
 
 export const UniversalWalletSection: React.FC = () => {
-  const [searchHandle, setSearchHandle] = useState('@etant');
+  const [searchHandle, setSearchHandle] = useState('@aarav');
   const [selectedIdentity, setSelectedIdentity] = useState(SAMPLE_IDENTITIES[0]);
   const [isResolving, setIsResolving] = useState(false);
 
@@ -27,55 +27,55 @@ export const UniversalWalletSection: React.FC = () => {
         (id) => id.handle.toLowerCase() === handle.toLowerCase()
       ) || {
         handle: handle.startsWith('@') ? handle : `@${handle}`,
-        name: 'Custom Resolved Peer',
+        name: 'Custom Resolved Sovereign Peer',
         avatar: 'CP',
-        lightningAddress: `${handle.replace('@', '')}@satconnect.net`,
-        nodePubkey: '02aa77...88bb11',
+        lightningAddress: `${handle.replace('@', '')}@satconnect.me`,
+        nodePubkey: '02aa77bb88cc99dd00ee11ff2233445566778899aabbccddeeff001122334455',
         supportedProtocols: ['BOLT 11', 'BOLT 12', 'LNURL-Pay'],
         preferredCurrency: 'INR (₹)',
         connectedWallet: 'Auto-Discovered LN Node',
-        trustScore: 95,
+        trustScore: 99,
         status: 'Active & Resolvable',
       };
       setSelectedIdentity(match);
       setIsResolving(false);
-    }, 300);
+    }, 250);
   };
 
   return (
-    <section id="connect" className="py-20 sm:py-28 bg-[#020617] relative">
+    <section id="connect" className="py-20 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-amber-500/30 text-xs font-mono text-amber-300 mb-4 font-semibold shadow-sm">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>01 · CONNECT — UNIVERSAL WALLET CONNECTIVITY</span>
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-mono font-bold mb-3">
+            <Zap className="w-3.5 h-3.5 text-blue-600" />
+            <span>01 · CONNECT — UNIVERSAL WALLET ABSTRACTION</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            One Payment Identity. <span className="text-amber-400">Any Compatible Wallet.</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            One Sovereign Identity. <span className="text-blue-600">Any Bitcoin Wallet.</span>
           </h2>
-          <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            Different users use different Bitcoin or Lightning wallets. SATCONNECT provides a unified payment identity layer that abstracts away complex node pubkeys, invoice expiration, and cross-wallet routing.
+          <p className="mt-3 text-base text-slate-600 leading-relaxed">
+            Different users hold different mobile and hardware Bitcoin wallets. SATCONNECT provides a unified sovereign handle layer that routes directly to your self-custodial node with zero intermediary lock-in.
           </p>
         </div>
 
-        {/* Main Grid: Interactive Identity Resolver & Network Architecture */}
+        {/* Main Grid: Interactive Identity Resolver & Protocol Support */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Interactive Identity Resolution Simulator */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 text-xs">
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs">
               <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4 text-cyan-400" />
-                <span className="font-mono font-bold text-white">LIVE IDENTITY RESOLVER</span>
+                <Globe className="w-4 h-4 text-blue-600" />
+                <span className="font-bold text-slate-900 uppercase">Live Identity Resolver</span>
               </div>
-              <span className="font-mono text-[11px] text-emerald-400 bg-emerald-950/40 border border-emerald-900/40 px-2 py-0.5 rounded">
+              <span className="font-mono text-[11px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded font-bold">
                 ● DNS &amp; LNURL Ready
               </span>
             </div>
 
             {/* Input handle box */}
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-2">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Enter Universal Payment Handle or Lightning Address
               </label>
               <div className="flex items-center gap-2">
@@ -86,161 +86,114 @@ export const UniversalWalletSection: React.FC = () => {
                     value={searchHandle}
                     onChange={(e) => setSearchHandle(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleResolve(searchHandle)}
-                    placeholder="e.g. @etant, @aarav, @maya"
-                    className="w-full bg-slate-950/80 border border-slate-700/80 focus:border-amber-400 text-white px-4 py-2.5 rounded-xl text-sm font-mono focus:outline-none transition-colors"
+                    placeholder="e.g. @aarav, @nimish, @maya"
+                    className="w-full bg-slate-50 border border-slate-300 focus:border-blue-500 text-slate-900 px-4 py-2.5 rounded-xl text-xs font-mono font-bold focus:outline-none transition-colors"
                   />
                 </div>
                 <button
                   id="identity-resolve-btn"
                   onClick={() => handleResolve(searchHandle)}
-                  disabled={isResolving}
-                  className="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors shrink-0 shadow-md shadow-amber-500/20"
+                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   <Search className="w-3.5 h-3.5" />
-                  <span>{isResolving ? 'Resolving...' : 'Resolve'}</span>
+                  <span>Resolve</span>
                 </button>
-              </div>
-
-              {/* Sample Quick Pick handles */}
-              <div className="flex items-center gap-2 mt-3 text-xs font-mono text-slate-400">
-                <span>Try sample:</span>
-                {SAMPLE_IDENTITIES.map((sample) => (
-                  <button
-                    key={sample.handle}
-                    onClick={() => handleResolve(sample.handle)}
-                    className="text-cyan-400 hover:text-cyan-300 bg-slate-950/80 hover:bg-slate-900 px-2 py-0.5 rounded border border-slate-800 transition-colors"
-                  >
-                    {sample.handle}
-                  </button>
-                ))}
               </div>
             </div>
 
-            {/* Resolved Identity Output Card */}
-            <div className="p-5 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-400 to-cyan-400 flex items-center justify-center font-bold text-slate-950 text-sm shadow-md">
+            {/* Quick Demo Handles */}
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="text-slate-500 font-medium">Quick Test:</span>
+              {SAMPLE_IDENTITIES.map((id) => (
+                <button
+                  key={id.handle}
+                  onClick={() => handleResolve(id.handle)}
+                  className={`px-2.5 py-1 rounded-lg font-mono text-xs font-semibold border transition-all cursor-pointer ${
+                    searchHandle.toLowerCase() === id.handle.toLowerCase()
+                      ? 'bg-blue-50 text-blue-700 border-blue-300'
+                      : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                  }`}
+                >
+                  {id.handle}
+                </button>
+              ))}
+            </div>
+
+            {/* Resolved Metadata Card */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                     {selectedIdentity.avatar}
                   </div>
                   <div>
-                    <div className="text-base font-bold text-white flex items-center gap-2">
-                      <span>{selectedIdentity.name}</span>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    </div>
-                    <div className="text-xs font-mono text-amber-300 font-medium">
-                      {selectedIdentity.handle}
-                    </div>
+                    <div className="font-bold text-slate-900">{selectedIdentity.name}</div>
+                    <div className="text-[11px] text-blue-600 font-semibold">{selectedIdentity.handle}</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-[10px] font-mono text-slate-400">TRUST SCORE</div>
-                  <div className="text-sm font-mono font-bold text-emerald-400">
-                    {selectedIdentity.trustScore}/100
-                  </div>
-                </div>
+                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded font-bold text-[10px]">
+                  ✓ Verified Sovereign
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-2 border-t border-slate-800">
-                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80">
-                  <div className="text-[10px] text-slate-400">LIGHTNING ENDPOINT</div>
-                  <div className="text-cyan-300 truncate mt-0.5 font-semibold">
-                    {selectedIdentity.lightningAddress}
-                  </div>
+              <div className="space-y-1.5 text-slate-600 text-[11px]">
+                <div className="flex justify-between">
+                  <span>Lightning Address:</span>
+                  <span className="font-bold text-slate-900">{selectedIdentity.lightningAddress}</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80">
-                  <div className="text-[10px] text-slate-400">CONNECTED WALLET</div>
-                  <div className="text-slate-200 truncate mt-0.5 font-semibold">
-                    {selectedIdentity.connectedWallet}
-                  </div>
+                <div className="flex justify-between">
+                  <span>Connected Backend:</span>
+                  <span className="font-bold text-slate-900">{selectedIdentity.connectedWallet}</span>
                 </div>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 text-xs font-mono">
-                <div className="text-[10px] text-slate-400 mb-1">SUPPORTED SETTLEMENT PROTOCOLS</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedIdentity.supportedProtocols.map((proto, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300 text-[10px]"
-                    >
-                      {proto}
-                    </span>
-                  ))}
+                <div className="flex justify-between">
+                  <span>Preferred Currency:</span>
+                  <span className="font-bold text-slate-900">{selectedIdentity.preferredCurrency}</span>
                 </div>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1">
-                <span>Preferred Currency: <strong className="text-white">{selectedIdentity.preferredCurrency}</strong></span>
-                <span className="text-emerald-400">✓ Ready for Instant Routing</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Wallet Abstraction Architecture explanation */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 space-y-6 shadow-2xl">
-              <h3 className="text-xl font-bold text-white">
-                How Wallet Abstraction Works
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                The sender never needs to know if the recipient is running Phoenix on Android, Breez on iOS, an LND node on a Raspberry Pi, or a Core Lightning enterprise instance. SATCONNECT performs the translation in milliseconds.
-              </p>
+          {/* Right Column: Protocols & Abstraction Guarantees */}
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5">
+            <h3 className="text-sm font-bold text-slate-900 uppercase pb-2 border-b border-slate-100">
+              Protocol Compatibility Matrix
+            </h3>
 
-              {/* 4 Architectural Pillars */}
-              <div className="space-y-3">
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white">1. Address Resolution</h4>
-                    <p className="text-[11px] text-slate-400 leading-snug mt-0.5">
-                      Maps human-friendly handles (@etant) to cryptographic keys, LNURL-pay endpoints, and BOLT 12 static offers.
-                    </p>
-                  </div>
+            <div className="space-y-3">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+                  <Zap className="w-4 h-4" />
                 </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5">
-                    <Cpu className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white">2. Wallet Abstraction</h4>
-                    <p className="text-[11px] text-slate-400 leading-snug mt-0.5">
-                      Eliminates vendor lock-in. Connect Phoenix, Breez, LND, CLN, or on-chain cold vaults simultaneously.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-                    <Server className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white">3. Payment Routing</h4>
-                    <p className="text-[11px] text-slate-400 leading-snug mt-0.5">
-                      Dynamically discovers the highest-liquidity multi-hop path to avoid channel exhaustion.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0 mt-0.5">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-white">4. Cross-Wallet Settlement</h4>
-                    <p className="text-[11px] text-slate-400 leading-snug mt-0.5">
-                      Sub-second finality with zero custodial intermediary holding funds at any point.
-                    </p>
-                  </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900">BOLT 11 &amp; BOLT 12 Offers</h4>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Automated generation of reusable, static QR codes with blinded paths for sender privacy.
+                  </p>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs font-mono text-slate-400 flex items-center justify-between">
-                <span>Protocols Supported:</span>
-                <span className="text-amber-400 font-semibold">LNURL · BOLT 11 · BOLT 12 · Silent Payments</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <Globe className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900">LNURL-Pay &amp; LNURL-Withdraw</h4>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Standard human-readable identifiers like <em>handle@satconnect.me</em> across any client.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900">Native Taproot &amp; SegWit Anchors</h4>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Direct on-chain fallback guarantees with zero counterparty risk or custodial escrow.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

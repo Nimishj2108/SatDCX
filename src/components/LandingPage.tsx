@@ -19,8 +19,17 @@ import {
   Shield,
   Activity,
   Send,
-  BookOpen
+  BookOpen,
+  Building2,
+  Trash2
 } from 'lucide-react';
+import { LivePriceTicker } from './LivePriceTicker';
+import { UniversalWalletSection } from './UniversalWalletSection';
+import { AIRouteIntelligenceSection } from './AIRouteIntelligenceSection';
+import { AIPaymentFirewallSection } from './AIPaymentFirewallSection';
+import { DustGuardSection } from './DustGuardSection';
+import { UpiBridgeSection } from './UpiBridgeSection';
+import { TelegramCopilotSection } from './TelegramCopilotSection';
 import { SuperlayerOverview } from './SuperlayerOverview';
 import { ProblemStory } from './ProblemStory';
 import { HowItWorksSection } from './HowItWorksSection';
@@ -32,12 +41,14 @@ interface LandingPageProps {
   onOpenLogin: () => void;
   onOpenSignup: () => void;
   onEnterDemoDashboard: () => void;
+  onOpenForeignerPortal?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenLogin,
   onOpenSignup,
   onEnterDemoDashboard,
+  onOpenForeignerPortal,
 }) => {
   const [handleQuery, setHandleQuery] = useState('');
   const [handleAvailable, setHandleAvailable] = useState<boolean | null>(null);
@@ -49,46 +60,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-orange-500 selection:text-white">
-      {/* 1. TOP TICKER STRIP - Angel One Style */}
-      <div className="bg-[#0b1e48] text-slate-200 text-xs py-1.5 px-4 border-b border-blue-950 overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between">
-        <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-          <div className="flex items-center gap-6 font-mono text-[11px]">
-            <div className="flex items-center gap-1.5">
-              <span className="text-slate-400">BTC/INR:</span>
-              <span className="font-bold text-white">₹83,92,400</span>
-              <span className="text-emerald-400 font-bold">+1.82% ▲</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-slate-400">MEMPOOL GAS:</span>
-              <span className="font-bold text-orange-400">12 sat/vB (Low Fee Window)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-slate-400">UPI SETTLEMENT:</span>
-              <span className="font-bold text-emerald-400">1.4s Instant</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-slate-400">CUSTODY RISK:</span>
-              <span className="font-bold text-cyan-300">0% (Pure Self-Custody)</span>
-            </div>
-          </div>
-
-          <div className="hidden lg:flex items-center gap-4 text-[11px] font-mono text-slate-300">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Non-Custodial Cryptographic Infrastructure
-            </span>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-orange-500 selection:text-white">
+      {/* 1. REAL-TIME MARKET PRICE, VOLATILITY & MEMPOOL GAS TICKER */}
+      <LivePriceTicker />
 
       {/* 2. TOP NAVIGATION - Angel One Style */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-900 to-blue-700 flex items-center justify-center text-white shadow-md shadow-blue-900/20">
-              <Zap className="w-5 h-5 text-orange-400 fill-orange-400" />
+            <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
+              <Zap className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xl font-extrabold font-mono text-slate-900 tracking-tight">
@@ -101,15 +83,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-600">
             <a href="#overview" className="hover:text-blue-600 transition-colors">6-Pillar Architecture</a>
-            <a href="#how-it-works" className="hover:text-blue-600 transition-colors">How It Works</a>
-            <a href="#comparison" className="hover:text-blue-600 transition-colors">Why SATCONNECT</a>
-            <a href="#trust" className="hover:text-blue-600 transition-colors">Security &amp; Non-Custody</a>
+            <a href="#connect" className="hover:text-blue-600 transition-colors">Sovereign Handles</a>
+            <a href="#pay-routing" className="hover:text-blue-600 transition-colors">AI Routing</a>
+            <a href="#dustguard" className="hover:text-blue-600 transition-colors">Bitcoin Dustbin</a>
+            <a href="#upi-bridge" className="hover:text-blue-600 transition-colors">UPI Bridge</a>
+            <a href="#telegram-copilot" className="hover:text-blue-600 transition-colors">Telegram Copilot</a>
           </nav>
 
           {/* Auth Action Buttons - Angel One Style */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {onOpenForeignerPortal && (
+              <button
+                type="button"
+                id="landing-foreigner-portal-btn"
+                onClick={onOpenForeignerPortal}
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold transition-all cursor-pointer shadow-xs"
+              >
+                <Globe className="w-3.5 h-3.5 text-amber-600" />
+                <span>🌐 Foreign Traveler Portal</span>
+              </button>
+            )}
             <button
               id="landing-login-btn"
               onClick={onOpenLogin}
@@ -120,16 +115,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <button
               id="landing-signup-btn"
               onClick={onOpenSignup}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/20 transition-all cursor-pointer"
             >
               Open Free Account
             </button>
             <button
               id="landing-demo-btn"
               onClick={onEnterDemoDashboard}
-              className="hidden lg:flex items-center gap-1 px-3 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-600 text-xs font-bold border border-orange-200 transition-colors cursor-pointer"
+              className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 text-xs font-bold border border-blue-200 transition-colors cursor-pointer"
             >
-              <span>Demo Dashboard</span>
+              <span>Dashboard Demo</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -144,12 +139,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-mono font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                <span>INDIA&apos;S FIRST BITCOIN &amp; LIGHTNING SUPERLAYER</span>
+                <span>INDIA&apos;S FIRST BITCOIN &amp; LIGHTNING FINTECH SUPERLAYER</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
                 Sovereign Bitcoin &amp; Lightning Finance.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                <span className="text-blue-600">
                   Simple as UPI.
                 </span>
               </h1>
@@ -208,6 +203,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     </button>
                   </div>
                 )}
+
+                {/* International Tourist Quick Link */}
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <span className="text-slate-500 font-medium">
+                    Visiting India as a Foreign Tourist?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={onOpenForeignerPortal}
+                    className="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Verify Passport &amp; Enable UPI</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
 
               {/* Trust Metrics Strip (Angel One Style) */}
@@ -279,7 +289,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <div className="pt-2">
                   <button
                     onClick={onEnterDemoDashboard}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:brightness-110 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
+                    className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer"
                   >
                     <span>Launch Live Interactive Dashboard</span>
                     <ArrowRight className="w-4 h-4" />
@@ -301,22 +311,40 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <SuperlayerOverview />
       </section>
 
-      {/* 6. PROBLEM STATEMENT & THE SATCONNECT SOLUTION */}
+      {/* 6. PILLAR 1: UNIVERSAL WALLET IDENTITY */}
+      <UniversalWalletSection />
+
+      {/* 7. PILLAR 2: AI ROUTE INTELLIGENCE */}
+      <AIRouteIntelligenceSection />
+
+      {/* 8. PILLAR 3: AI PAYMENT FIREWALL */}
+      <AIPaymentFirewallSection />
+
+      {/* 9. PILLAR 4: BITCOIN DUST & DUSTBIN */}
+      <DustGuardSection />
+
+      {/* 10. PILLAR 5: LIGHTNING TO UPI BRIDGE */}
+      <UpiBridgeSection />
+
+      {/* 11. PILLAR 6: TELEGRAM SOVEREIGN COPILOT */}
+      <TelegramCopilotSection />
+
+      {/* 12. PROBLEM STATEMENT & THE SATCONNECT SOLUTION */}
       <section className="py-20 bg-white border-b border-slate-200">
         <ProblemStory />
       </section>
 
-      {/* 7. HOW IT WORKS */}
+      {/* 13. HOW IT WORKS */}
       <section id="how-it-works" className="py-20 bg-slate-50 border-b border-slate-200">
         <HowItWorksSection />
       </section>
 
-      {/* 8. COMPARISON MATRIX (SATCONNECT VS OTHERS) */}
+      {/* 14. COMPARISON MATRIX (SATCONNECT VS OTHERS) */}
       <section id="comparison" className="py-20 bg-white border-b border-slate-200">
         <FeatureMatrixSection />
       </section>
 
-      {/* 9. FOOTER & CTA */}
+      {/* 15. FOOTER & CTA */}
       <FooterCTASection onClaimHandle={onOpenSignup} />
     </div>
   );

@@ -4,7 +4,7 @@ import {
   LayoutDashboard, 
   Send, 
   ShieldCheck, 
-  Layers, 
+  Trash2, 
   Sparkles, 
   GitBranch, 
   BookOpen, 
@@ -23,9 +23,14 @@ import {
   ExternalLink,
   Shield,
   TrendingUp,
-  Cpu
+  Cpu,
+  Building2,
+  Lock,
+  Coins,
+  Globe2
 } from 'lucide-react';
 import { UserProfile, DashboardPageType } from '../types';
+import { LivePriceTicker } from './LivePriceTicker';
 
 interface DashboardLayoutProps {
   user: UserProfile;
@@ -47,252 +52,173 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showQuickPayModal, setShowQuickPayModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [quickPayAddress, setQuickPayAddress] = useState('starbucks@icici');
-  const [quickPayAmount, setQuickPayAmount] = useState('250');
+  const [quickPayAddress, setQuickPayAddress] = useState('chaiwali@okhdfcbank');
+  const [quickPayAmount, setQuickPayAmount] = useState('120');
   const [quickPaySuccess, setQuickPaySuccess] = useState(false);
 
-  // Notification items
   const notifications = [
     {
       id: 'n1',
       title: 'Optimal Mempool Window',
-      desc: 'Mempool fee dropped to 12 sat/vB. Good time for UTXO batch consolidation.',
+      desc: 'Mempool fee dropped to 12 sat/vB. Optimal time to consolidate Dustbin sats.',
       time: '10m ago',
       type: 'dust',
     },
     {
       id: 'n2',
       title: 'Scam Invoice Intercepted',
-      desc: 'AI Firewall flagged and blocked a spoofed invoice with 0 reputation score.',
+      desc: 'AI Firewall flagged and quarantined an unverified routing node.',
       time: '1h ago',
       type: 'firewall',
     },
     {
       id: 'n3',
-      title: 'Daily DCA Executed',
-      desc: '₹500 INR converted to 5,952 sats in non-custodial savings pool.',
+      title: 'Founders Multi-Sig Synced',
+      desc: user.accountType === 'business' 
+        ? '3-of-5 corporate treasury threshold quorum verified.'
+        : 'Daily DCA: ₹500 INR converted to 5,952 sats.',
       time: '4h ago',
       type: 'savings',
     },
   ];
 
-  const navSections = [
-    {
-      group: 'PORTFOLIO & CORE',
-      items: [
-        { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard, badge: null },
-        { id: 'pay-settle', label: 'Universal Pay & Settle', icon: Send, badge: 'UPI + LN' },
-        { id: 'savings', label: 'Smart Savings & DCA', icon: Sparkles, badge: 'Auto' },
-      ],
-    },
-    {
-      group: 'DEFENSE & SECURITY',
-      items: [
-        { id: 'firewall', label: 'AI Payment Firewall', icon: ShieldCheck, badge: 'Shielded' },
-        { id: 'dustguard', label: 'UTXO DustGuard', icon: Layers, badge: '12 sat/vB' },
-        { id: 'traceability', label: 'Traceability & Multisig', icon: GitBranch, badge: '2-of-3' },
-        { id: 'security-center', label: 'Cybersecurity Command', icon: Activity, badge: '100%' },
-      ],
-    },
-    {
-      group: 'LEARN & DEVELOPER',
-      items: [
-        { id: 'copilot-learn', label: 'Telegram Copilot & Learn', icon: BookOpen, badge: 'AI Bot' },
-        { id: 'developers', label: 'Developer API & SDK', icon: Terminal, badge: 'REST' },
-      ],
-    },
-  ];
+  const isForeigner = user.nationality === 'foreign' || user.nationality === 'foreigner';
 
-  const handleExecuteQuickPay = (e: React.FormEvent) => {
+  const navSections = isForeigner
+    ? [
+        {
+          group: 'TOURIST TRIP & UPI PAY',
+          items: [
+            { id: 'overview' as DashboardPageType, label: 'Traveler Hub Overview', icon: LayoutDashboard, badge: 'Trip Active' },
+            { id: 'pay-settle' as DashboardPageType, label: 'Travel Pay & Fair-Price AI', icon: Send, badge: 'MRP AI' },
+            { id: 'savings' as DashboardPageType, label: 'Trip Budget & FX Rates', icon: Sparkles, badge: 'Live FX' },
+          ],
+        },
+        {
+          group: 'DEFENSE & DUSTBIN',
+          items: [
+            { id: 'dustguard' as DashboardPageType, label: 'Sovereign Dustbin', icon: Trash2, badge: 'Auto-Sweep' },
+            { id: 'firewall' as DashboardPageType, label: 'AI Merchant Firewall', icon: ShieldCheck, badge: 'Protected' },
+            { id: 'security-center' as DashboardPageType, label: 'Passport ZKP & Sovereign Keys', icon: Lock, badge: 'Verified' },
+            { id: 'traceability' as DashboardPageType, label: 'Lightning Travel Routes', icon: GitBranch, badge: 'Mesh A→B→C' },
+          ],
+        },
+        {
+          group: 'TOURIST GUIDE & APIS',
+          items: [
+            { id: 'copilot-learn' as DashboardPageType, label: 'India Travel FinTech Guide', icon: BookOpen, badge: 'Tourist FAQs' },
+            { id: 'developers' as DashboardPageType, label: 'Developer API & Webhooks', icon: Terminal, badge: 'v1.4' },
+          ],
+        },
+      ]
+    : [
+        {
+          group: 'PORTFOLIO & TRANSACTIONS',
+          items: [
+            { id: 'overview' as DashboardPageType, label: 'Dashboard Overview', icon: LayoutDashboard, badge: null },
+            { id: 'pay-settle' as DashboardPageType, label: 'Universal Pay & Settle', icon: Send, badge: 'UPI + LN' },
+            { id: 'savings' as DashboardPageType, label: 'Smart Savings & DCA', icon: Sparkles, badge: 'Auto' },
+          ],
+        },
+        {
+          group: 'DEFENSE & DUST OPTIMIZER',
+          items: [
+            { id: 'dustguard' as DashboardPageType, label: 'Bitcoin Dust & Dustbin', icon: Trash2, badge: 'Active' },
+            { id: 'firewall' as DashboardPageType, label: 'AI Payment Firewall', icon: ShieldCheck, badge: 'Protected' },
+            { id: 'security-center' as DashboardPageType, label: 'Security Center & Keys', icon: Lock, badge: '100% Encrypted' },
+            { id: 'traceability' as DashboardPageType, label: 'Traceability & Multisig', icon: GitBranch, badge: user.accountType === 'business' ? '3-of-5' : '2-of-3' },
+          ],
+        },
+        {
+          group: 'EDUCATION & DEVELOPERS',
+          items: [
+            { id: 'copilot-learn' as DashboardPageType, label: 'FinTech Academy & FAQs', icon: BookOpen, badge: 'Interactive' },
+            { id: 'developers' as DashboardPageType, label: 'Developer API & Webhooks', icon: Terminal, badge: 'v1.4' },
+          ],
+        },
+      ];
+
+  const handleQuickPay = (e: React.FormEvent) => {
     e.preventDefault();
     setQuickPaySuccess(true);
     setTimeout(() => {
       setQuickPaySuccess(false);
       setShowQuickPayModal(false);
-    }, 1800);
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col font-sans">
-      {/* 1. TOP TICKER STRIP - Angel One Style */}
-      <div className="bg-[#0b1e48] text-slate-200 text-xs py-1.5 px-4 border-b border-blue-900/50 overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between">
-        <div className="flex items-center gap-6 font-mono text-[11px]">
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">BTC/INR:</span>
-            <span className="font-bold text-white">₹83,92,400</span>
-            <span className="text-emerald-400 font-bold">+1.82% ▲</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">MEMPOOL GAS:</span>
-            <span className="font-bold text-orange-400">12 sat/vB (Optimal)</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">LIGHTNING NODES:</span>
-            <span className="font-bold text-cyan-300">18,420</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">UPI SETTLEMENT:</span>
-            <span className="font-bold text-emerald-400">1.4s (Instant)</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-slate-100 flex flex-col font-sans text-slate-900">
+      {/* Real-time Ticker at the absolute top */}
+      <LivePriceTicker />
 
-        <div className="hidden lg:flex items-center gap-4 text-[11px] font-mono text-slate-300">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Zero Custody Mainnet Connected
-          </span>
-          <button
-            onClick={onGoToLanding}
-            className="text-orange-400 hover:text-orange-300 font-bold flex items-center gap-1 transition-colors"
-          >
-            <span>Landing Page</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </button>
-        </div>
-      </div>
-
-      {/* 2. TOP MAIN HEADER - Angel One Style */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Mobile Sidebar Toggle & Logo */}
-          <div className="flex items-center gap-3">
-            <button
-              id="mobile-sidebar-toggle"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100"
-            >
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-
-            <div 
-              onClick={() => onNavigate('overview')}
-              className="flex items-center gap-2 cursor-pointer select-none"
-            >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-900 to-blue-700 flex items-center justify-center text-white shadow-md shadow-blue-900/20">
-                <Zap className="w-5 h-5 text-orange-400 fill-orange-400" />
-              </div>
-              <div>
-                <span className="text-lg font-extrabold font-mono text-slate-900 tracking-tight">
-                  SAT<span className="text-orange-500">CONNECT</span>
-                </span>
-                <span className="hidden sm:inline-block ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 text-blue-800">
-                  DASHBOARD
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Search Bar - Angel One Search Style */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4">
-            <div className="relative w-full">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search @handle, UPI VPA, LNURL, or TXID..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-100/80 border border-slate-200 text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-              />
-            </div>
-          </div>
-
-          {/* Right Action Tools: Quick Pay, Notifications, Profile */}
-          <div className="flex items-center gap-3">
-            <button
-              id="header-quick-pay-btn"
-              onClick={() => setShowQuickPayModal(true)}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md shadow-orange-500/20 transition-all cursor-pointer"
-            >
-              <QrCode className="w-4 h-4" />
-              <span>Quick Settle</span>
-            </button>
-
-            {/* Notifications Dropdown */}
-            <div className="relative">
-              <button
-                id="header-notifications-btn"
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 relative transition-colors"
-              >
-                <Bell className="w-5 h-5" />
-                <span className="w-2 h-2 rounded-full bg-orange-500 absolute top-1.5 right-1.5 ring-2 ring-white" />
-              </button>
-
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-50 text-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <span className="font-bold text-slate-900">Live Telemetry Alerts</span>
-                    <span className="text-[10px] text-blue-600 font-semibold cursor-pointer">Mark read</span>
-                  </div>
-                  <div className="space-y-2">
-                    {notifications.map((n) => (
-                      <div key={n.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-slate-800">{n.title}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">{n.time}</span>
-                        </div>
-                        <p className="text-[11px] text-slate-600">{n.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* User Profile Badge */}
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-              <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
-                {user.name.charAt(0)}
-              </div>
-              <div className="hidden sm:block text-left">
-                <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
-                  <span>{user.name}</span>
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                </div>
-                <div className="text-[10px] text-slate-400 font-mono">{user.handle}</div>
-              </div>
-              <button
-                id="header-logout-btn"
-                onClick={onLogout}
-                title="Log Out"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* 3. MAIN DASHBOARD BODY (Sidebar + Page Content) */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex gap-6">
-        {/* LEFT COLUMN SIDEBAR - Angel One Style */}
+      {/* Main Container */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Column Sidebar - Angel One Royal Navy Branding */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white lg:bg-transparent border-r lg:border-none border-slate-200 p-4 lg:p-0 flex flex-col justify-between transition-transform duration-200 ease-in-out ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0b1e48] text-white flex flex-col justify-between transition-transform duration-200 lg:static lg:translate-x-0 ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="space-y-6">
-            {/* User Wallet Info Card in Sidebar */}
-            <div className="bg-[#0b1e48] rounded-2xl p-4 text-white shadow-md">
-              <div className="flex items-center justify-between text-[11px] text-slate-300 font-mono mb-2">
-                <span>WALLET ID</span>
-                <span className="text-emerald-400 font-bold">100% NON-CUSTODIAL</span>
+          <div>
+            {/* Sidebar Brand Header */}
+            <div className="p-5 flex items-center justify-between border-b border-blue-950">
+              <button
+                type="button"
+                onClick={onGoToLanding}
+                className="flex items-center gap-2.5 text-left group cursor-pointer"
+              >
+                <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <span className="text-base font-bold font-mono tracking-tight text-white block leading-none">
+                    SAT<span className="text-orange-400">CONNECT</span>
+                  </span>
+                  <span className="text-[9px] font-mono text-slate-400 font-semibold tracking-wider block mt-0.5">
+                    SOVEREIGN SUPERLAYER
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-1 rounded-lg text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* User Account Tier Badge */}
+            <div className="p-4 mx-3 my-3 rounded-xl bg-blue-950/60 border border-blue-900/60 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                {isForeigner ? (
+                  <Globe2 className="w-5 h-5 text-amber-300" />
+                ) : user.accountType === 'business' ? (
+                  <Building2 className="w-5 h-5" />
+                ) : (
+                  user.handle.substring(1, 3).toUpperCase()
+                )}
               </div>
-              <div className="text-base font-bold font-mono text-white mb-0.5">
-                ₹{user.balanceInr.toLocaleString('en-IN')}
-              </div>
-              <div className="text-[11px] font-mono text-orange-400">
-                {user.balanceBtc.toFixed(4)} BTC
+              <div className="overflow-hidden">
+                <div className="text-xs font-bold text-white truncate flex items-center gap-1">
+                  <span>{user.name}</span>
+                </div>
+                <div className="text-[11px] font-mono text-orange-400 font-bold truncate">
+                  {user.handle}
+                </div>
+                <span className="inline-block text-[9px] font-mono text-emerald-300 font-semibold mt-0.5">
+                  ● {isForeigner ? 'Tourist Sovereign (Passport ZKP)' : user.accountType === 'business' ? 'Corporate 4x Multiplier' : 'Indian Resident Sovereign'}
+                </span>
               </div>
             </div>
 
-            {/* Navigation Groups */}
-            <nav className="space-y-5">
+            {/* Navigation Menus */}
+            <div className="px-3 py-2 space-y-5 overflow-y-auto max-h-[calc(100vh-280px)] scrollbar-none text-xs font-medium">
               {navSections.map((section, idx) => (
                 <div key={idx} className="space-y-1">
-                  <div className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">
+                  <div className="px-3 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
                     {section.group}
                   </div>
                   {section.items.map((item) => {
@@ -301,27 +227,28 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     return (
                       <button
                         key={item.id}
+                        type="button"
                         id={`nav-item-${item.id}`}
                         onClick={() => {
-                          onNavigate(item.id as DashboardPageType);
+                          onNavigate(item.id);
                           setSidebarOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all text-left cursor-pointer ${
                           isActive
-                            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                            ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30'
+                            : 'text-slate-300 hover:bg-white/10 hover:text-white'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                          <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                           <span>{item.label}</span>
                         </div>
                         {item.badge && (
                           <span
-                            className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${
+                            className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${
                               isActive
                                 ? 'bg-white/20 text-white'
-                                : 'bg-slate-200 text-slate-700'
+                                : 'bg-blue-900/60 text-blue-300 border border-blue-800'
                             }`}
                           >
                             {item.badge}
@@ -332,122 +259,191 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   })}
                 </div>
               ))}
-            </nav>
+            </div>
           </div>
 
-          {/* Sidebar Footer Links */}
-          <div className="pt-4 border-t border-slate-200 space-y-2 text-xs">
+          {/* Bottom Controls */}
+          <div className="p-3 border-t border-blue-950 space-y-2">
             <button
-              onClick={onGoToLanding}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors font-medium"
+              type="button"
+              id="sidebar-quick-pay-btn"
+              onClick={() => setShowQuickPayModal(true)}
+              className="w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 transition-all cursor-pointer"
             >
-              <ExternalLink className="w-4 h-4" />
-              <span>Landing Page &amp; Docs</span>
+              <Zap className="w-3.5 h-3.5" />
+              <span>Quick Scan &amp; Settle UPI</span>
             </button>
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors font-medium"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Log Out</span>
-            </button>
+
+            <div className="flex items-center justify-between text-xs font-medium pt-1 px-1">
+              <button
+                type="button"
+                onClick={onGoToLanding}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                ← Public Landing
+              </button>
+              <button
+                type="button"
+                id="sidebar-logout-btn"
+                onClick={onLogout}
+                className="text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-1"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Exit</span>
+              </button>
+            </div>
           </div>
         </aside>
 
-        {/* Overlay backdrop for mobile drawer */}
-        {sidebarOpen && (
-          <div
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-950/40 z-30 lg:hidden"
-          />
-        )}
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+          {/* Top Navbar */}
+          <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
 
-        {/* RIGHT MAIN CONTENT AREA */}
-        <main className="flex-1 min-w-0">
-          {children}
-        </main>
+              <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-500">
+                <span>PORTFOLIO /</span>
+                <span className="font-bold text-slate-900 uppercase">
+                  {activePage.replace('-', ' ')}
+                </span>
+              </div>
+            </div>
+
+            {/* Header Right Actions */}
+            <div className="flex items-center gap-3">
+              {/* Notification Bell */}
+              <div className="relative">
+                <button
+                  type="button"
+                  id="notifications-bell-btn"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 relative transition-colors"
+                >
+                  <Bell className="w-4 h-4" />
+                  <span className="w-2 h-2 rounded-full bg-orange-500 absolute top-1.5 right-1.5" />
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-4 space-y-3 z-50 text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 font-bold text-slate-900">
+                      <span>Real-Time Security &amp; Dust Alerts</span>
+                      <span className="text-[10px] text-blue-600 font-mono">3 New</span>
+                    </div>
+                    <div className="space-y-2">
+                      {notifications.map((n) => (
+                        <div
+                          key={n.id}
+                          className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5"
+                        >
+                          <div className="font-bold text-slate-900 flex justify-between">
+                            <span>{n.title}</span>
+                            <span className="text-[10px] text-slate-400 font-normal">{n.time}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 leading-relaxed">{n.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sovereign Status Pill */}
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Sovereign Enclave Active</span>
+              </div>
+
+              {/* User Handle Pill */}
+              <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+                <div className="text-right hidden sm:block">
+                  <div className="text-xs font-bold text-slate-900 leading-tight">
+                    {user.name}
+                  </div>
+                  <div className="text-[11px] font-mono text-blue-600 font-semibold">
+                    {user.handle}
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-xl bg-[#0b1e48] text-white flex items-center justify-center font-bold text-xs">
+                  {user.accountType === 'business' ? 'CORP' : user.handle.substring(1, 3).toUpperCase()}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Page Content Body */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+            {children}
+          </main>
+        </div>
       </div>
 
-      {/* QUICK PAY / SETTLE MODAL */}
+      {/* Quick Pay Modal */}
       {showQuickPayModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-slate-200 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xl max-w-md w-full space-y-4 text-slate-900">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-orange-500" />
-                <span className="text-sm font-bold text-slate-900">Quick Pay / Settle via Lightning</span>
+                <QrCode className="w-5 h-5 text-blue-600" />
+                <h3 className="font-bold text-sm">Quick Scan &amp; Settle Merchant UPI</h3>
               </div>
               <button
+                type="button"
                 onClick={() => setShowQuickPayModal(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-xs"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
               >
-                ✕ Close
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {quickPaySuccess ? (
-              <div className="py-8 text-center space-y-3">
-                <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto">
-                  <CheckCircle2 className="w-8 h-8" />
+              <div className="p-6 text-center space-y-2">
+                <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Settlement Complete!</h3>
-                <p className="text-xs text-slate-500">
-                  ₹{quickPayAmount} INR routed to <span className="font-mono font-bold text-slate-800">{quickPayAddress}</span> with 0 fee.
+                <h4 className="font-bold text-sm text-slate-900">Payment Settled Instantly!</h4>
+                <p className="text-xs text-slate-500 font-mono">
+                  ₹{quickPayAmount} INR credited to {quickPayAddress} in 0.41s
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleExecuteQuickPay} className="space-y-4">
+              <form onSubmit={handleQuickPay} className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Recipient (UPI VPA, @handle, or Lightning Invoice)
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Merchant UPI ID or LNURL:
                   </label>
                   <input
                     type="text"
                     value={quickPayAddress}
                     onChange={(e) => setQuickPayAddress(e.target.value)}
                     required
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold bg-slate-50"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Amount (INR)
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Amount in Rupees (INR):
                   </label>
-                  <div className="relative">
-                    <span className="text-slate-400 font-bold text-xs absolute left-3 top-1/2 -translate-y-1/2">
-                      ₹
-                    </span>
-                    <input
-                      type="number"
-                      value={quickPayAmount}
-                      onChange={(e) => setQuickPayAmount(e.target.value)}
-                      required
-                      min="1"
-                      className="w-full pl-7 pr-3 py-2 rounded-xl border border-slate-300 text-sm font-bold font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
-                  <div className="flex justify-between text-[11px] text-slate-500 mt-1 font-mono">
-                    <span>≈ {Math.round(Number(quickPayAmount || 0) * 13.9)} Satoshis</span>
-                    <span className="text-emerald-600 font-bold">Routing Fee: 0 sats</span>
-                  </div>
+                  <input
+                    type="number"
+                    value={quickPayAmount}
+                    onChange={(e) => setQuickPayAmount(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono font-bold bg-slate-50"
+                  />
                 </div>
-
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold">
-                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                    <span>AI Payment Firewall Verified</span>
-                  </div>
-                  <p className="text-[11px] text-blue-700">
-                    Recipient verified clean. Non-custodial Lightning channel will settle instantly.
-                  </p>
-                </div>
-
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md shadow-orange-500/20 transition-all cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
-                  Pay ₹{quickPayAmount} via Lightning Channel
+                  <Zap className="w-4 h-4" />
+                  <span>Settle via Lightning Mesh</span>
                 </button>
               </form>
             )}

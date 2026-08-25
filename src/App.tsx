@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Preloader } from './components/Preloader';
 import { AuthModal } from './components/AuthModal';
+import { ForeignerTravelerModal } from './components/ForeignerTravelerModal';
 import { LandingPage } from './components/LandingPage';
 import { DashboardLayout } from './components/DashboardLayout';
 import { OverviewPage } from './components/dashboard/OverviewPage';
@@ -13,7 +14,7 @@ import { CybersecurityPage } from './components/dashboard/CybersecurityPage';
 import { LearnCopilotPage } from './components/dashboard/LearnCopilotPage';
 import { DeveloperPage } from './components/dashboard/DeveloperPage';
 import { GeminiChatbot } from './components/GeminiChatbot';
-import { UserProfile, DashboardPageType } from './types';
+import { UserProfile, DashboardPageType, TripPlannerData } from './types';
 
 // Default mock user profile for immediate demo exploration
 const DEFAULT_USER: UserProfile = {
@@ -21,6 +22,8 @@ const DEFAULT_USER: UserProfile = {
   handle: '@nimish.sat',
   mobile: '+91 98765 43210',
   email: 'nimish@satconnect.io',
+  accountType: 'individual',
+  nationality: 'indian',
   kycStatus: 'Verified',
   balanceBtc: 1.70186,
   balanceInr: 142800,
@@ -37,6 +40,7 @@ export default function App() {
   const [activeDashboardPage, setActiveDashboardPage] = useState<DashboardPageType>('overview');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [foreignerModalOpen, setForeignerModalOpen] = useState(false);
   const [user, setUser] = useState<UserProfile>(DEFAULT_USER);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -64,6 +68,11 @@ export default function App() {
     setAuthModalOpen(true);
   };
 
+  const handleOpenForeignerPortal = () => {
+    setAuthModalOpen(false);
+    setForeignerModalOpen(true);
+  };
+
   const handleLoginSuccess = (authenticatedUser: UserProfile) => {
     setUser(authenticatedUser);
     setIsLoggedIn(true);
@@ -72,9 +81,20 @@ export default function App() {
     setActiveDashboardPage('overview');
   };
 
+  const handleCompleteTravelerSetup = (travelerUser: UserProfile, tripData: TripPlannerData) => {
+    setUser(travelerUser);
+    setIsLoggedIn(true);
+    localStorage.setItem('satconnect_auth_user', JSON.stringify(travelerUser));
+    localStorage.setItem('satconnect_traveler_trip', JSON.stringify(tripData));
+    setForeignerModalOpen(false);
+    setViewMode('dashboard');
+    setActiveDashboardPage('pay-settle'); // Immediately direct traveler to the UPI & Fair Price scanner!
+  };
+
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('satconnect_auth_user');
+    localStorage.removeItem('satconnect_traveler_trip');
     setViewMode('landing');
   };
 
@@ -96,6 +116,14 @@ export default function App() {
         onClose={() => setAuthModalOpen(false)}
         initialMode={authMode}
         onLoginSuccess={handleLoginSuccess}
+        onLaunchForeignerPortal={handleOpenForeignerPortal}
+      />
+
+      {/* 6-Step Foreigner Traveler Onboarding & Passport Blockchain Verification Modal */}
+      <ForeignerTravelerModal
+        isOpen={foreignerModalOpen}
+        onClose={() => setForeignerModalOpen(false)}
+        onCompleteTravelerSetup={handleCompleteTravelerSetup}
       />
 
       {/* VIEW SWITCHER: LANDING PAGE vs MULTI-PAGE DASHBOARD */}
@@ -104,6 +132,7 @@ export default function App() {
           onOpenLogin={handleOpenLogin}
           onOpenSignup={handleOpenSignup}
           onEnterDemoDashboard={handleEnterDemoDashboard}
+          onOpenForeignerPortal={handleOpenForeignerPortal}
         />
       ) : (
         <DashboardLayout
@@ -122,7 +151,7 @@ export default function App() {
             />
           )}
 
-          {activeDashboardPage === 'pay-settle' && <PaySettlePage />}
+          {activeDashboardPage === 'pay-settle' && <PaySettlePage user={user} />}
 
           {activeDashboardPage === 'firewall' && <FirewallPage />}
 
@@ -145,4 +174,3 @@ export default function App() {
     </div>
   );
 }
-

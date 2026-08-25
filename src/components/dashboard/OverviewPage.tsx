@@ -2,20 +2,19 @@ import React from 'react';
 import { 
   TrendingUp, 
   ArrowUpRight, 
-  ArrowDownLeft, 
   Zap, 
   ShieldCheck, 
-  Sparkles, 
-  Layers, 
-  Lock, 
   QrCode, 
-  CheckCircle2, 
   ChevronRight,
-  Send,
-  ExternalLink,
-  Activity,
-  Cpu,
-  Info
+  Send, 
+  Building2, 
+  Users, 
+  Trash2, 
+  Globe2, 
+  Plane, 
+  Scale, 
+  Lock,
+  Coins
 } from 'lucide-react';
 import { UserProfile, DashboardPageType } from '../../types';
 import { TransactionHistorySection } from './TransactionHistorySection';
@@ -31,60 +30,219 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
   onNavigate,
   onOpenQuickPay,
 }) => {
+  const isForeigner = user.nationality === 'foreign' || user.nationality === 'foreigner';
+  const isBusiness = user.accountType === 'business';
+  const company = user.companyProfile;
+
   return (
     <div className="space-y-6">
-      {/* Top Welcome Banner - Angel One Style */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
-              NON-CUSTODIAL ACCOUNT
-            </span>
-            <span className="text-xs text-slate-500 font-mono">
-              Handle: <strong className="text-slate-900">{user.handle}</strong>
+      {/* ========================================================================= */}
+      {/* TOP WELCOME BANNER: DISTINCT FOR FOREIGN TOURIST vs INDIAN CITIZEN/CORP */}
+      {/* ========================================================================= */}
+      {isForeigner ? (
+        /* FOREIGN TOURIST WELCOME BANNER */
+        <div className="bg-gradient-to-r from-slate-900 via-[#0b1e48] to-slate-900 text-white rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+                <Globe2 className="w-3.5 h-3.5" />
+                <span>🌐 INTERNATIONAL TOURIST SOVEREIGN HUB</span>
+              </span>
+              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                <Lock className="w-3 h-3" />
+                <span>🛂 PASSPORT ZKP VERIFIED ON-CHAIN</span>
+              </span>
+            </div>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">
+              Welcome to India, {user.name} 👋
+            </h1>
+            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+              Your self-custody Bitcoin travel bridge is active with real-time Lightning routing and the AI Tourist MRP Fair-Price Firewall.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              id="overview-tourist-pay-btn"
+              onClick={() => onNavigate('pay-settle')}
+              className="px-4 py-2.5 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-orange-500/20 transition-all cursor-pointer"
+            >
+              <QrCode className="w-4 h-4" />
+              <span>Travel Pay &amp; MRP AI Scanner</span>
+            </button>
+            <button
+              id="overview-tourist-keys-btn"
+              onClick={() => onNavigate('security-center')}
+              className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 transition-all cursor-pointer border border-white/10"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Passport Proofs</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* INDIAN CITIZEN / CORPORATE MSME WELCOME BANNER */
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span
+                className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                  isBusiness
+                    ? 'bg-orange-100 text-orange-900 border border-orange-200'
+                    : 'bg-blue-100 text-blue-900 border border-blue-200'
+                }`}
+              >
+                {isBusiness ? '🏢 CORPORATE MSME TREASURY' : '⚡ SOVEREIGN INDIVIDUAL ACCOUNT'}
+              </span>
+              <span className="text-xs text-slate-500 font-mono">
+                Handle: <strong className="text-slate-900">{user.handle}</strong>
+              </span>
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Welcome back, {user.name} 👋
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {isBusiness
+                ? 'Multi-Sig 3-of-5 corporate treasury with 4x limits and cross-border remittance layer active.'
+                : 'Your self-custody Bitcoin & Lightning superlayer is active with 100% cryptographic integrity.'}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              id="overview-quick-pay-btn"
+              onClick={onOpenQuickPay}
+              className="px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-orange-500/20 transition-all cursor-pointer"
+            >
+              <QrCode className="w-4 h-4" />
+              <span>Pay UPI QR / Send Sats</span>
+            </button>
+            <button
+              id="overview-go-firewall"
+              onClick={() => onNavigate('firewall')}
+              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Security Center</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* TOURIST TRAVEL TRIP CARD (FOREIGNERS ONLY) */}
+      {isForeigner && (
+        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <Plane className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  India Tourism &bull; Active Bitcoin Travel Allocation
+                </h3>
+                <p className="text-[11px] text-slate-500 font-mono">
+                  Passport Hash: <strong className="text-slate-800">bc1qpass...882x</strong> &bull; Visa: <strong>30-Day e-Tourist Visa</strong>
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+              26 Days Remaining in India
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Welcome back, {user.name} 👋
-          </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Your self-custody Bitcoin &amp; Lightning superlayer is active with 100% cryptographic integrity.
-          </p>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            id="overview-quick-pay-btn"
-            onClick={onOpenQuickPay}
-            className="px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-orange-500/20 transition-all cursor-pointer"
-          >
-            <QrCode className="w-4 h-4" />
-            <span>Pay UPI QR / Send Sats</span>
-          </button>
-          <button
-            id="overview-go-firewall"
-            onClick={() => onNavigate('firewall')}
-            className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer"
-          >
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Security Center</span>
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Allocated Trip Bitcoin:</span>
+              <span className="font-bold text-orange-600 text-sm">{user.balanceBtc.toFixed(4)} BTC</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Live INR Spending Power:</span>
+              <span className="font-bold text-slate-900 text-sm">₹{user.balanceInr.toLocaleString('en-IN')}</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Price Gouge Shield:</span>
+              <span className="font-bold text-emerald-700 text-sm">Active (Legal Metrology 2011)</span>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* If Corporate / Small Business: Render Dedicated Treasury Layer */}
+      {!isForeigner && isBusiness && company && (
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-orange-600" />
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  {company.companyName}
+                </h3>
+                <p className="text-[11px] text-slate-500 font-mono">
+                  CIN: <strong>{company.cinNumber}</strong> • PAN: <strong>{company.companyPan}</strong> • GST: <strong>{company.gstNumber}</strong>
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-mono font-bold text-orange-800 bg-orange-100 px-2.5 py-1 rounded-lg">
+              {company.transactionLimitMultiplier}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">MSME Udyam Registration:</span>
+              <span className="font-bold text-slate-900">{company.msmeUdyamNumber}</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Corporate Multi-Sig Quorum:</span>
+              <span className="font-bold text-emerald-700">{company.multisigQuorum}</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Cross-Border Remit (IEC):</span>
+              <span className="font-bold text-blue-700">{company.exportImportCode} (Active)</span>
+            </div>
+          </div>
+
+          {/* Founders Savings Wallets Strip */}
+          <div className="space-y-2 pt-2">
+            <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <Users className="w-4 h-4 text-blue-600" />
+              <span>Founders &amp; Authorities Bitcoin Savings Wallets</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs">
+              {company.directors.map((dir) => (
+                <div key={dir.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                  <div className="font-bold text-slate-900 font-sans flex justify-between">
+                    <span>{dir.name}</span>
+                    <span className="text-orange-600 font-mono">{dir.savingsBalanceBtc.toFixed(2)} BTC</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 font-sans">
+                    {dir.designation} • {dir.shareholdingPercent}% Stake
+                  </div>
+                  <div className="text-[10px] text-emerald-700 font-semibold truncate">
+                    ✓ Key Shard: {dir.multisigKeyShard}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Total Balance Card (Angel One Navy/Blue Theme) */}
         <div className="md:col-span-7 bg-[#0b1e48] rounded-2xl p-6 text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
           <div className="absolute right-0 top-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute right-6 bottom-6 opacity-10 text-white pointer-events-none">
-            <Zap className="w-36 h-36" />
-          </div>
 
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono text-slate-300 uppercase tracking-wider">
-                Total Sovereign Portfolio
+                {isForeigner
+                  ? 'Travel Satoshis Allocation'
+                  : isBusiness
+                  ? 'Corporate Treasury Balance'
+                  : 'Total Sovereign Portfolio'}
               </span>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
                 <TrendingUp className="w-3.5 h-3.5" />
@@ -99,177 +257,85 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
               </div>
               <div className="text-sm font-mono text-orange-400 flex items-center gap-2">
                 <span>{user.balanceBtc.toFixed(8)} BTC</span>
-                <span className="text-slate-400">• (170,186,000 sats)</span>
+                <span className="text-slate-400 text-xs">
+                  (≈ {Math.round(user.balanceBtc * 100000000).toLocaleString()} sats)
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Quick Portfolio Rails */}
-          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/10 text-xs font-mono">
-            <div>
-              <span className="text-slate-400 text-[11px] block">Lightning Channels</span>
-              <span className="text-white font-bold">{user.channelsCount} Active (Zero-Fee)</span>
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/10 text-xs font-mono">
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/10">
+              <span className="text-slate-400 text-[10px] block">Lightning Channels</span>
+              <span className="font-bold text-white text-sm">{user.channelsCount} Active</span>
             </div>
-            <div>
-              <span className="text-slate-400 text-[11px] block">Cold Multisig Vault</span>
-              <span className="text-emerald-400 font-bold">2-of-3 Quorum</span>
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/10">
+              <span className="text-slate-400 text-[10px] block">Security Health</span>
+              <span className="font-bold text-emerald-400 text-sm">{user.securityScore}% Quorum</span>
             </div>
-            <div>
-              <span className="text-slate-400 text-[11px] block">Firewall Shield</span>
-              <span className="text-cyan-300 font-bold">Active &amp; Insured</span>
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/10">
+              <span className="text-slate-400 text-[10px] block">Dustbin Pool</span>
+              <span className="font-bold text-orange-300 text-sm">4,850 Sats</span>
             </div>
           </div>
         </div>
 
-        {/* Live Network & Market Stats (Angel One Style) */}
-        <div className="md:col-span-5 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-blue-600" />
-              <span className="text-xs font-bold text-slate-900 uppercase">Live Network Indices</span>
+        {/* Quick Actions & Dustbin Summary Box */}
+        <div className="md:col-span-5 space-y-4">
+          {/* Dustbin Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                <Trash2 className="w-4 h-4 text-orange-500" />
+                <span>Bitcoin Dustbin &amp; UTXO Optimizer</span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold">
+                12 sat/vB Fee
+              </span>
             </div>
-            <span className="flex items-center gap-1 text-[11px] text-emerald-600 font-mono font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Mainnet Connected
-            </span>
-          </div>
-
-          <div className="space-y-3 my-4">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Bitcoin Price (INR)</span>
-              <span className="font-mono font-bold text-slate-900">₹83,92,400 <span className="text-emerald-600">(+1.8%)</span></span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Mempool Next Block Gas</span>
-              <span className="font-mono font-bold text-blue-600">12 sat/vB (Low Fee Window)</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">UPI ↔ Lightning Settlement</span>
-              <span className="font-mono font-bold text-emerald-600">~1.4 seconds avg</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">AI Route Success Probability</span>
-              <span className="font-mono font-bold text-orange-600">99.94% Optimal</span>
-            </div>
-          </div>
-
-          <button
-            id="overview-explore-routes-btn"
-            onClick={() => onNavigate('pay-settle')}
-            className="w-full py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-          >
-            <span>Launch Universal Payment Terminal</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* 4 Feature Action Cards (Angel One Style) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Pay & Settle */}
-        <div 
-          onClick={() => onNavigate('pay-settle')}
-          className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <Send className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] font-mono text-slate-400">01 · PAY</span>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-              Universal Pay &amp; Settle
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Send to any @handle, LNURL, or scan merchant UPI QR directly.
+            <p className="text-xs text-slate-500 leading-relaxed">
+              4,850 micro-change sats collected from UPI conversions. Ready to club via Lightning Route Intelligence.
             </p>
+            <button
+              onClick={() => onNavigate('dustguard')}
+              className="w-full py-2 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-orange-700 text-slate-800 font-bold text-xs font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <span>Manage Dustbin &amp; Sweep Sats</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
-            <span>Open Terminal</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </div>
-        </div>
 
-        {/* Card 2: AI Payment Firewall */}
-        <div 
-          onClick={() => onNavigate('firewall')}
-          className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-              <ShieldCheck className="w-5 h-5" />
+          {/* Quick Pay / Settle Card */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                <Send className="w-4 h-4 text-blue-600" />
+                <span>
+                  {isForeigner ? 'Travel Pay & MRP Scanner' : 'Universal Pay & Settle'}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-bold">
+                Instant 0.4s
+              </span>
             </div>
-            <span className="text-[11px] font-mono text-emerald-600 font-bold">100% SECURE</span>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-              AI Payment Firewall
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Pre-flight risk analysis, scam interception, and zero duplicate invoices.
+            <p className="text-xs text-slate-500 leading-relaxed">
+              {isForeigner
+                ? 'Scan any Indian merchant QR. Settle in INR with AI price fairness checks on tourist items.'
+                : 'Send Bitcoin to another wallet (@handle), or scan merchant UPI QR to settle in INR.'}
             </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
-            <span>Inspect Threat Logs</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Card 3: UTXO DustGuard */}
-        <div 
-          onClick={() => onNavigate('dustguard')}
-          className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors">
-              <Layers className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] font-mono text-orange-600 font-bold">8 UTXOs</span>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 group-hover:text-orange-600 transition-colors">
-              UTXO DustGuard
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Mempool gas forecaster &amp; 1-click batch consolidation saves ₹1,840.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-orange-600">
-            <span>Optimize UTXOs</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </div>
-        </div>
-
-        {/* Card 4: Smart Savings & DCA */}
-        <div 
-          onClick={() => onNavigate('savings')}
-          className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] font-mono text-indigo-600 font-bold">DCA ACTIVE</span>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-              Smart Savings Vault
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Non-custodial recurring Bitcoin goals with automated stress testing.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-indigo-600">
-            <span>View Goals</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <button
+              onClick={() => onNavigate('pay-settle')}
+              className="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+            >
+              <span>Open Pay Terminal</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Full Transaction History Component with Risk Metadata & Deep Inspection */}
+      {/* Transaction History Component */}
       <TransactionHistorySection />
     </div>
   );
 };
-

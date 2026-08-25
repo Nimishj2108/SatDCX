@@ -11,12 +11,50 @@ export type DashboardPageType =
   | 'copilot-learn'
   | 'developers';
 
+export type UserAccountType = 'individual' | 'business';
+export type UserNationality = 'indian' | 'foreign' | 'foreigner' | 'nri';
+
+export interface CompanyDirector {
+  id: string;
+  name: string;
+  designation: string;
+  panNumber: string;
+  dinNumber: string;
+  shareholdingPercent: number;
+  multisigKeyShard: string;
+  savingsWalletAddress: string;
+  savingsBalanceBtc: number;
+  isAuthorizedSignatory: boolean;
+  status: 'Verified' | 'Pending';
+}
+
+export interface CompanyProfile {
+  companyName: string;
+  legalEntityName: string;
+  cinNumber: string; // Corporate Identification Number e.g. U72900KA2024PTC189201
+  companyPan: string; // e.g. AAACK9982M
+  gstNumber: string; // e.g. 29AAACK9982M1Z5
+  msmeUdyamNumber: string; // e.g. UDYAM-KR-03-0029812
+  registeredOffice: string;
+  directors: CompanyDirector[];
+  treasuryBtc: number;
+  treasuryInr: number;
+  multisigQuorum: string; // e.g. '3-of-5 Directors'
+  transactionLimitMultiplier: string; // '4x Corporate Multiplier (₹5,00,000 / tx)'
+  crossBorderRemitActive: boolean;
+  exportImportCode: string; // IEC Code e.g. 0512039941
+  corporateHandle: string; // e.g. '@krypton.corp.sat'
+}
+
 export interface UserProfile {
   name: string;
   handle: string;
   mobile: string;
   email: string;
-  kycStatus: 'Verified' | 'Pending' | 'Non-Custodial Tier 1';
+  accountType: UserAccountType;
+  nationality: UserNationality;
+  isFirstTimeUser?: boolean;
+  kycStatus: 'Verified' | 'Pending' | 'Non-Custodial Tier 1' | 'Corporate MSME Verified';
   balanceBtc: number;
   balanceInr: number;
   unconfirmedSats: number;
@@ -24,7 +62,21 @@ export interface UserProfile {
   securityScore: number;
   pin?: string;
   lightningAddress: string;
+  segwitAddress?: string;
+  taprootAddress?: string;
   memberSince: string;
+  companyProfile?: CompanyProfile;
+}
+
+export interface BitcoinDustbinState {
+  totalDustDepositedSats: number;
+  totalDustDepositedInr: number;
+  dustSweepsCount: number;
+  handlingChargeSavedInr: number;
+  pendingDustUtxos: number;
+  autoDustbinDepositEnabled: boolean;
+  nextConsolidationMempoolTarget: number; // in sat/vB
+  lastClubbedTxId?: string;
 }
 
 export interface TransactionRecord {
@@ -237,13 +289,94 @@ export interface PresentationData {
   slides: [SlideData, SlideData]; // Exactly 2 structured slides
 }
 
+export interface ForeignerCountryConfig {
+  id: string;
+  name: string;
+  flag: string;
+  currencyCode: string;
+  currencySymbol: string;
+  exchangeRateToInr: number; // 1 unit of foreign currency = X INR
+  primaryColor: string;
+  accentColor: string;
+  gradientClass: string;
+  glowColor: string;
+  visaPolicy: 'e-Visa 30-Day/1-Yr' | 'Visa on Arrival' | 'Visa-Exempt (Indo-Nepal Treaty)' | 'e-Business / Conference';
+  visaNote: string;
+  popularTripDays: number;
+}
+
+export interface PassportVerificationProof {
+  passportNumber: string;
+  country: string;
+  fullName: string;
+  gender: string;
+  dateOfBirth: string;
+  expiryDate: string;
+  issuingAuthority: string;
+  documentHash: string;
+  bitcoinBlockHash: string;
+  merkleRoot: string;
+  opReturnTxId: string;
+  zkpAttestationId: string;
+  verificationTimestamp: string;
+  blockchainAnchorHeight: number;
+  isConfirmed: boolean;
+}
+
+export interface TripPlannerData {
+  country: ForeignerCountryConfig;
+  travelerName: string;
+  cashCarriedForeign: number;
+  btcInWallet: number;
+  tripStartDate: string;
+  tripEndDate: string;
+  tripDaysCount: number;
+  visaCategory: 'Tourist Visa (e-Visa)' | 'Business Visa (e-Business)' | 'Student Visa (e-Student)' | 'Conference/Medical' | 'Visa-Exempt Entry';
+  travelStyle: 'budget' | 'mid' | 'luxury';
+  dailyBudgetInr: number;
+  totalEstimatedInr: number;
+  recommendedSats: number;
+  recommendedBtc: number;
+  satsPurchased: number;
+  isWalletReady: boolean;
+  passportProof?: PassportVerificationProof;
+}
+
+export interface PriceGougeAssessment {
+  itemName: string;
+  category: 'Packaged FMCG' | 'Street Food & Snacks' | 'Cafe & Casual Dining' | '5-Star Luxury Dining' | 'Tourist Souvenir & Handicraft' | 'Transportation & Auto Rickshaw';
+  quotedPriceInr: number;
+  statutoryMrpInr: number;
+  locationType: 'Roadside Stall' | 'Tourist Attraction Kiosk' | 'Casual Cafe' | '5-Star Luxury Hotel' | 'Airport Lounge';
+  isPackaged: boolean;
+  fairnessScore: number; // 0 to 10
+  verdict: 'Fair Statutory MRP (10/10)' | 'Reasonable Minor Markup (7-8/10)' | 'Elevated Luxury Ambiance (8-9/10)' | 'Moderate Tourist Premium (5-6/10)' | 'Severe Tourist Gouge Detected (1-3/10)';
+  explanation: string;
+  aiQuestioning: string[];
+  dustRiskSats: number;
+  dustWarning?: string;
+}
+
+export interface LightningTravelHop {
+  nodeId: string;
+  nodeName: string;
+  location: string;
+  ipGeo: string;
+  channelCapacitySats: number;
+  latencyMs: number;
+  feeSats: number;
+  status: 'active' | 'routing' | 'settled';
+}
+
 export interface ChatMessage {
   id: string;
-  sender: 'user' | 'assistant';
+  sender: 'user' | 'bot' | 'assistant';
   text: string;
   timestamp: string;
   topic?: string;
   hasPresentation?: boolean;
   presentationData?: PresentationData;
+  presentation?: PresentationData;
+  feedbackRating?: 'helpful' | 'unhelpful';
 }
 

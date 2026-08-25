@@ -12,6 +12,10 @@ import {
   ArrowLeftRight,
   CheckCircle2,
   Lock,
+  Building2,
+  User,
+  ShieldCheck,
+  TrendingUp,
 } from 'lucide-react';
 import { COMPATIBLE_WALLETS } from '../data/mockData';
 import { WalletNode } from '../types';
@@ -23,281 +27,145 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onConnectWallet, onLaunchSandbox }) => {
   const [selectedWallet, setSelectedWallet] = useState<WalletNode>(COMPATIBLE_WALLETS[0]);
-  const [activeStep, setActiveStep] = useState<number>(0);
 
-  const handleConnect = () => {
-    if (onConnectWallet) {
-      onConnectWallet();
-    } else {
-      const el = document.getElementById('connect');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleOpenAuth = () => {
+    if (onConnectWallet) onConnectWallet();
   };
 
   const handleLaunch = () => {
-    if (onLaunchSandbox) {
-      onLaunchSandbox();
-    } else {
-      const el = document.getElementById('how-it-works') || document.getElementById('superlayer');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (onLaunchSandbox) onLaunchSandbox();
   };
 
-  const sequentialSteps = [
-    { label: 'Address Resolution', detail: 'Maps human handle @etant to LNURL / BOLT 12 offer' },
-    { label: 'Payment Routing', detail: 'Evaluates channel liquidity & routes via lowest-risk path' },
-    { label: 'Cross-Wallet Settlement', detail: 'Sub-second cryptographic finality on Bitcoin & Lightning' },
-  ];
-
   return (
-    <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden bg-gradient-to-b from-[#020617] via-[#0b1329] to-[#020617]">
-      {/* Background subtle mesh grids and soft light glows */}
-      <div className="absolute inset-0 bg-sleek-grid [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-amber-500/8 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[400px] h-[300px] bg-indigo-500/8 rounded-full blur-[120px] pointer-events-none" />
-
+    <section className="relative pt-10 pb-16 sm:pb-24 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Column: Typography & CTAs */}
-          <div className="lg:col-span-6 space-y-6 text-left">
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-amber-500/30 text-amber-300 text-xs font-mono tracking-wider font-semibold shadow-inner"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>BITCOIN × LIGHTNING × AI SUPERLAYER</span>
-            </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column: Value Proposition & CTAs */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            {/* Top Pill - Angel One High Contrast Style */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-mono text-blue-800 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>THE SOVEREIGN BITCOIN &amp; LIGHTNING FINTECH SUPERLAYER</span>
+            </div>
 
             {/* Main Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1]"
-            >
-              One Identity.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-cyan-300">
-                Any Wallet.
-              </span>
-            </motion.h1>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+              Sovereign Bitcoin Payments. <br />
+              <span className="text-blue-600">Universal Indian UPI Settle.</span>
+            </h1>
 
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg sm:text-xl font-medium text-slate-200 leading-relaxed max-w-xl"
-            >
-              The Bitcoin financial superlayer for saving, spending, securing, and understanding your money.
-            </motion.p>
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+              Connect your sovereign Bitcoin &amp; Lightning wallet. Claim your custom <strong>@handle</strong>, settle instant Indian merchant UPI QRs in INR, and manage corporate multi-sig Bitcoin treasuries with 100% self-custody.
+            </p>
 
-            {/* Supporting copy */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-sm text-slate-400 leading-relaxed max-w-xl"
-            >
-              Interconnect wallets, intelligently route payments, protect Bitcoin savings, manage UTXOs, and bring explainable financial intelligence directly to every satoshi.
-            </motion.p>
-
-            {/* CTA Button Group */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-wrap items-center gap-3.5 pt-2"
-            >
+            {/* Action Buttons: Individual vs Small Business Onboarding */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              {/* Primary Signup CTA */}
               <button
-                id="hero-primary-connect-btn"
-                onClick={handleConnect}
-                className="px-6 py-3.5 rounded-xl font-semibold text-slate-950 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 hover:brightness-110 shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2 text-sm"
+                type="button"
+                id="hero-claim-handle-btn"
+                onClick={handleOpenAuth}
+                className="px-7 py-3.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-orange-500/25 transition-all cursor-pointer hover:-translate-y-0.5"
               >
-                <Zap className="w-4 h-4 fill-slate-950" />
-                <span>Connect Wallet</span>
+                <Zap className="w-4 h-4 text-amber-200" />
+                <span>Claim Sovereign Handle (Free)</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
-              <a
-                id="hero-secondary-explore-btn"
-                href="#superlayer"
-                className="px-5 py-3.5 rounded-xl font-semibold text-slate-200 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 transition-all text-sm flex items-center gap-2"
-              >
-                <span>Explore Platform</span>
-                <ArrowRight className="w-4 h-4 text-slate-400" />
-              </a>
-
+              {/* Business Onboarding CTA */}
               <button
-                id="hero-tertiary-sandbox-btn"
-                onClick={handleLaunch}
-                className="px-4 py-3.5 rounded-xl text-xs font-mono text-cyan-300 hover:text-cyan-200 bg-cyan-950/40 hover:bg-cyan-950/70 border border-cyan-800/60 transition-all flex items-center gap-1.5"
+                type="button"
+                id="hero-business-onboard-btn"
+                onClick={handleOpenAuth}
+                className="px-6 py-3.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <span>Launch Interactive App</span>
+                <Building2 className="w-4 h-4 text-blue-600" />
+                <span>Join as Small Business (4x Limits)</span>
               </button>
-            </motion.div>
+            </div>
 
-            {/* Micro value badges */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="pt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400"
-            >
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>100% Self-Custody</span>
+            {/* Key Trust Signals */}
+            <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-500 font-mono">
+              <div className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Zero Custodial Risk</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Your Keys, Your Control</span>
+              <div className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Sub-Second Finality</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>AI-Assisted Security</span>
+              <div className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>MCA21 &amp; GSTIN Ready</span>
               </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Right Column: Infrastructure Diagram */}
-          <div className="lg:col-span-6">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="relative p-6 sm:p-8 rounded-2xl bg-slate-900/70 backdrop-blur-xl border border-slate-800 shadow-2xl shadow-black/90"
-            >
-              {/* Card top banner */}
-              <div className="flex items-center justify-between pb-5 border-b border-slate-800/80 text-xs">
+          {/* Right Column: Live Interactive Superlayer Terminal Preview */}
+          <div className="lg:col-span-5">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+              {/* Header Bar */}
+              <div className="bg-[#0b1e48] p-4 text-white flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-mono text-slate-300 font-semibold">
-                    SATCONNECT INFRASTRUCTURE MESH
+                  <div className="w-3 h-3 rounded-full bg-rose-500" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <span className="text-xs font-mono font-bold ml-2 text-slate-200">
+                    SATCONNECT MESH v3.2
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
-                  v2.4 Live
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  ● MAINNET ACTIVE
                 </span>
               </div>
 
-              {/* Central Hub Visualization */}
-              <div className="relative my-8 py-6 flex flex-col items-center justify-center">
-                {/* Connecting SVG Flow lines */}
-                <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none stroke-slate-700/60"
-                  viewBox="0 0 400 300"
-                  fill="none"
+              {/* Body */}
+              <div className="p-6 space-y-4 font-mono text-xs">
+                {/* Resolved Handle Card */}
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                    Universal Identity Anchor
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-base font-extrabold text-blue-600 font-sans">
+                      @nimish.sat
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                      100% Non-Custodial
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-600 truncate">
+                    LNURL: nimish@satconnect.me
+                  </div>
+                </div>
+
+                {/* Live Route Intelligence Matrix */}
+                <div className="space-y-1.5">
+                  <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                    Multi-Hop Route Latency
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 flex justify-between items-center text-emerald-900">
+                    <span className="font-bold">Route A (Direct Peer Mesh)</span>
+                    <span className="font-bold">0.42s • 0 sat fee</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-slate-700">
+                    <span>Route B (Multi-Hop Lightning)</span>
+                    <span>1.14s • 2 sats fee</span>
+                  </div>
+                </div>
+
+                {/* Interactive Launch Button */}
+                <button
+                  type="button"
+                  onClick={handleLaunch}
+                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer font-sans"
                 >
-                  {/* Lines from 4 corners to center */}
-                  <path d="M 60 40 Q 150 70 200 130" strokeDasharray="3 3" />
-                  <path d="M 340 40 Q 250 70 200 130" strokeDasharray="3 3" />
-                  <path d="M 60 260 Q 140 210 200 170" strokeDasharray="3 3" />
-                  <path d="M 340 260 Q 260 210 200 170" strokeDasharray="3 3" />
-                  <path d="M 30 150 L 140 150" strokeDasharray="3 3" />
-                  <path d="M 370 150 L 260 150" strokeDasharray="3 3" />
-                </svg>
-
-                {/* Surrounding Nodes Grid */}
-                <div className="w-full grid grid-cols-3 gap-3 sm:gap-4 mb-4">
-                  {COMPATIBLE_WALLETS.slice(0, 3).map((wallet) => (
-                    <button
-                      key={wallet.id}
-                      onClick={() => setSelectedWallet(wallet)}
-                      className={`p-3 rounded-xl text-left border transition-all ${
-                        selectedWallet.id === wallet.id
-                          ? 'bg-amber-500/10 border-amber-400 shadow-md shadow-amber-500/10'
-                          : 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        {wallet.id === 'phoenix' && <Flame className="w-4 h-4 text-amber-400" />}
-                        {wallet.id === 'breez' && <Zap className="w-4 h-4 text-cyan-400" />}
-                        {wallet.id === 'lnd' && <Server className="w-4 h-4 text-emerald-400" />}
-                        <span className="text-[10px] font-mono text-slate-400">{wallet.pingMs}ms</span>
-                      </div>
-                      <div className="text-xs font-semibold text-white truncate">{wallet.name}</div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                        {wallet.status === 'connected' ? '● Connected' : '○ Compatible'}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Center Node: SATCONNECT One Identity Layer */}
-                <div className="relative z-10 my-3 w-full max-w-sm p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border-2 border-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.18)] text-center">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-mono font-bold mb-1.5">
-                    <Zap className="w-3 h-3 fill-amber-300" />
-                    ONE IDENTITY SUPERLAYER
-                  </div>
-                  <div className="text-base font-extrabold text-white font-mono tracking-tight">
-                    SATCONNECT UNIVERSAL ROUTER
-                  </div>
-                  <div className="mt-1 text-xs text-slate-300 flex items-center justify-center gap-2">
-                    <span className="text-cyan-300 font-mono font-medium">@etant</span>
-                    <span className="text-slate-500">↔</span>
-                    <span className="text-amber-300 font-mono font-medium">Any LN / BTC Node</span>
-                  </div>
-                </div>
-
-                {/* Bottom Nodes Grid */}
-                <div className="w-full grid grid-cols-3 gap-3 sm:gap-4 mt-4">
-                  {COMPATIBLE_WALLETS.slice(3, 6).map((wallet) => (
-                    <button
-                      key={wallet.id}
-                      onClick={() => setSelectedWallet(wallet)}
-                      className={`p-3 rounded-xl text-left border transition-all ${
-                        selectedWallet.id === wallet.id
-                          ? 'bg-cyan-500/10 border-cyan-400 shadow-md shadow-cyan-500/10'
-                          : 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        {wallet.id === 'core_lightning' && <Cpu className="w-4 h-4 text-cyan-400" />}
-                        {wallet.id === 'sparrow' && <Shield className="w-4 h-4 text-emerald-400" />}
-                        {wallet.id === 'exchange' && <ArrowLeftRight className="w-4 h-4 text-purple-400" />}
-                        <span className="text-[10px] font-mono text-slate-400">{wallet.pingMs}ms</span>
-                      </div>
-                      <div className="text-xs font-semibold text-white truncate">{wallet.name}</div>
-                      <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                        {wallet.status === 'connected' ? '● Connected' : '○ Compatible'}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                  <span>Explore Live Sovereign Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
-
-              {/* Sequential Protocol Reveal */}
-              <div className="space-y-2 pt-2 border-t border-slate-800/80">
-                <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>ORCHESTRATION PIPELINE</span>
-                  <span>Step {activeStep + 1} of 3</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {sequentialSteps.map((step, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveStep(idx)}
-                      className={`p-2 rounded-lg text-left border text-xs transition-all ${
-                        activeStep === idx
-                          ? 'bg-slate-800/90 border-amber-400/80 text-white shadow-sm'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-300'
-                      }`}
-                    >
-                      <div className="font-semibold truncate">{step.label}</div>
-                      <div className="text-[10px] text-slate-400 truncate mt-0.5">{step.detail}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Base Network Anchor */}
-              <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px] font-mono text-slate-400">
-                <span className="text-amber-400 font-medium">⚡ Base Layer: Bitcoin + Lightning Network</span>
-                <span className="text-slate-400">Selected Node: {selectedWallet.name} ({selectedWallet.pingMs}ms)</span>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
