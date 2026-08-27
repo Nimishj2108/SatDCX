@@ -75,7 +75,7 @@ export const ProblemStory: React.FC = () => {
             </span>
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            New users want the mathematical sovereignty of Bitcoin with the intuitive simplicity of modern consumer FinTech. SATCONNECT bridges the gap without sacrificing self-custody.
+            New users want the mathematical sovereignty of Bitcoin with the intuitive simplicity of modern consumer FinTech. SAT DCX bridges the gap without sacrificing self-custody.
           </p>
         </div>
 
@@ -85,7 +85,7 @@ export const ProblemStory: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/30 backdrop-blur-md border border-red-500/20 shadow-xl relative overflow-hidden flex flex-col justify-between">
             <div className="absolute top-0 right-0 px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-mono font-semibold border-b border-l border-red-500/20 rounded-bl-xl flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5" />
-              <span>BEFORE SATCONNECT</span>
+              <span>BEFORE SAT DCX</span>
             </div>
 
             <div>
@@ -124,7 +124,7 @@ export const ProblemStory: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-amber-500/40 shadow-2xl shadow-amber-500/5 relative overflow-hidden flex flex-col justify-between">
             <div className="absolute top-0 right-0 px-4 py-1.5 bg-amber-500/20 text-amber-300 text-xs font-mono font-semibold border-b border-l border-amber-500/30 rounded-bl-xl flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>WITH SATCONNECT</span>
+              <span>WITH SAT DCX</span>
             </div>
 
             <div>

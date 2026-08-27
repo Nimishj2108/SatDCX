@@ -87,7 +87,7 @@ export const FeatureMatrixSection: React.FC = () => {
             <span>COMPLETE CAPABILITY MATRIX</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            The Complete SATCONNECT Feature Grid
+            The Complete SAT DCX Feature Grid
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
             Every feature traces back to our core mission: Bitcoin&apos;s Security, FinTech&apos;s Simplicity, and AI&apos;s Intelligence.

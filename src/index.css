@@ -90,3 +90,68 @@
   background: #94a3b8;
 }
 
+/* ========================================================================= */
+/* SHIMMER SKELETON ANIMATIONS FOR DATA FETCHING COMPONENTS */
+/* ========================================================================= */
+@keyframes shimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 0%,
+    #e2e8f0 25%,
+    #ffffff 50%,
+    #e2e8f0 75%,
+    #f1f5f9 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-shimmer-subtle {
+  background: linear-gradient(
+    90deg,
+    #f8fafc 0%,
+    #e2e8f0 30%,
+    #f1f5f9 50%,
+    #e2e8f0 70%,
+    #f8fafc 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-shimmer-dark {
+  background: linear-gradient(
+    90deg,
+    #0f172a 0%,
+    #1e293b 25%,
+    #334155 50%,
+    #1e293b 75%,
+    #0f172a 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-shimmer-blue {
+  background: linear-gradient(
+    90deg,
+    #0b1e48 0%,
+    #1e3a8a 25%,
+    #3b82f6 50%,
+    #1e3a8a 75%,
+    #0b1e48 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerWave 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+

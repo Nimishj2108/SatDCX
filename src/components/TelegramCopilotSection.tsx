@@ -20,7 +20,7 @@ export const TelegramCopilotSection: React.FC = () => {
   >([
     {
       sender: 'bot',
-      text: '👋 SATCONNECT Sovereign FinTech Copilot online. Your keys remain 100% on your device. I provide real-time risk, UTXO hygiene, and volatility intelligence.',
+      text: '👋 SAT DCX Sovereign FinTech Copilot online. Your keys remain 100% on your device. I provide real-time risk, UTXO hygiene, and volatility intelligence.',
     },
     {
       sender: 'user',
@@ -29,7 +29,7 @@ export const TelegramCopilotSection: React.FC = () => {
     {
       sender: 'bot',
       text: '🚨 Payment Firewall Alert: ₹18,400 Lightning payment requested to unfamiliar recipient (@crypto_vendor_99). Risk score: 87/100 (HIGH). Adaptive biometric verification required.',
-      actionBtn: 'Review Payment in SATCONNECT App',
+      actionBtn: 'Review Payment in SAT DCX App',
     },
   ]);
 
@@ -94,7 +94,7 @@ export const TelegramCopilotSection: React.FC = () => {
                 <Bot className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-sm">@SATCONNECT_Bot</h4>
+                <h4 className="font-bold text-sm">@SATDCX_Bot</h4>
                 <p className="text-[11px] text-white/80">Sovereign FinTech Copilot • Online</p>
               </div>
             </div>

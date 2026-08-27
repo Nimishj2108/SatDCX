@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { FOREIGN_COUNTRIES } from '../data/mockData';
 import { ForeignerCountryConfig, PassportVerificationProof, TripPlannerData, UserProfile } from '../types';
-import { getLatestMarketData } from '../services/livePriceService';
+import { useLiveRates } from '../services/livePriceService';
 
 interface ForeignerTravelerModalProps {
   isOpen: boolean;
@@ -39,6 +39,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
   onClose,
   onCompleteTravelerSetup,
 }) => {
+  const liveRates = useLiveRates();
   // Step sequence:
   // 1. 'country' -> 2. 'passport' -> 3. 'blockchain_verify' -> 4. 'trip_details' -> 5. 'budget_sats' -> 6. 'lightning_ready'
   const [step, setStep] = useState<
@@ -70,7 +71,8 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
 
   // 5. Trip Budget & Satoshi Recommendation
   const [travelStyle, setTravelStyle] = useState<'budget' | 'mid' | 'luxury'>('mid');
-  const [marketRateBtcInr, setMarketRateBtcInr] = useState(8392400); // 1 BTC = ₹83,92,400
+  const marketRateBtcInr = liveRates.btcInr || 8552190;
+  const liveFiatRateToInr = liveRates.fiatToInr[selectedCountry.currencyCode] || selectedCountry.exchangeRateToInr;
   const [satsPurchased, setSatsPurchased] = useState<number>(0);
   const [isBuyingSats, setIsBuyingSats] = useState(false);
 
@@ -85,14 +87,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
   const totalEstimatedTripInr = currentDailyBudgetInr * tripDays;
   const recommendedSats = Math.round((totalEstimatedTripInr / marketRateBtcInr) * 100000000);
   const recommendedBtc = totalEstimatedTripInr / marketRateBtcInr;
-  const foreignCurrencyNeeded = totalEstimatedTripInr / selectedCountry.exchangeRateToInr;
-
-  useEffect(() => {
-    const market = getLatestMarketData();
-    if (market.btcInr) {
-      setMarketRateBtcInr(market.btcInr);
-    }
-  }, []);
+  const foreignCurrencyNeeded = totalEstimatedTripInr / liveFiatRateToInr;
 
   // Calculate days when dates change
   useEffect(() => {
@@ -189,7 +184,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
       name: travelerName,
       handle: `@${travelerName.toLowerCase().replace(/\s+/g, '')}.tourist.sat`,
       mobile: '+1 415 892 0192',
-      email: `${travelerName.toLowerCase().replace(/\s+/g, '')}@traveler.satconnect.io`,
+      email: `${travelerName.toLowerCase().replace(/\s+/g, '')}@traveler.satdcx.io`,
       accountType: 'individual',
       nationality: 'foreign',
       isFirstTimeUser: false,
@@ -200,7 +195,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
       channelsCount: 6,
       securityScore: 99,
       pin: '4488',
-      lightningAddress: `${travelerName.toLowerCase().replace(/\s+/g, '')}@satconnect.me`,
+      lightningAddress: `${travelerName.toLowerCase().replace(/\s+/g, '')}@satdcx.me`,
       segwitAddress: 'bc1qtraveler' + Math.random().toString(36).substring(2, 10),
       taprootAddress: 'bc1ptravelervault' + Math.random().toString(36).substring(2, 10),
       memberSince: 'August 2026',
@@ -313,7 +308,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
                     Step 1: Select Your Home Country &amp; Currency
                   </h3>
                   <p className="text-xs text-slate-500">
-                    SATCONNECT customizes live currency conversions (USD/EUR/GBP/JPY ↔ INR) and applies bilateral Indian visa regulations.
+                    SAT DCX customizes live currency conversions (USD/EUR/GBP/JPY ↔ INR) and applies bilateral Indian visa regulations.
                   </p>
                 </div>
 
@@ -985,7 +980,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
                     className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 transition-all cursor-pointer"
                   >
                     <Zap className="w-5 h-5 text-amber-300" />
-                    <span>Launch SATCONNECT Sovereign Travel Terminal</span>
+                    <span>Launch SAT DCX Sovereign Travel Terminal</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>

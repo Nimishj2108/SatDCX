@@ -34,7 +34,240 @@ async function startServer() {
     });
   });
 
-  // API Route: Gemini Chatbot for SATCONNECT FinTech & Sovereign Education
+  // =========================================================================
+  // REAL-TIME CURRENCY & BITCOIN RATES ENGINE (/api/rates)
+  // Fetches live CoinGecko BTC (USD, INR) + mempool.space Gas + Frankfurter FX
+  // Caches server-side for 30-60s with fallback on upstream failure
+  // =========================================================================
+  interface LiveRatesResponse {
+    btcUsd: number;
+    btcInr: number;
+    usdInr: number;
+    btc24hChangeInr: number;
+    gasSatVb: number;
+    lastUpdated: string;
+    bitcoin: {
+      usd: number;
+      inr: number;
+      usd_24h_change: number;
+      inr_24h_change: number;
+    };
+    fiat: {
+      base: string;
+      rates: Record<string, number>;
+    };
+    fiatToInr: Record<string, number>;
+    satsPerInr: number;
+    inrPerSat: number;
+    source: string;
+    cached: boolean;
+  }
+
+  let cachedRatesData: LiveRatesResponse = {
+    btcUsd: 87466.46,
+    btcInr: 7631448.61,
+    usdInr: 87.25,
+    btc24hChangeInr: 2.18,
+    gasSatVb: 12,
+    lastUpdated: new Date().toISOString(),
+    bitcoin: {
+      usd: 87466.46,
+      inr: 7631448.61,
+      usd_24h_change: 2.15,
+      inr_24h_change: 2.18,
+    },
+    fiat: {
+      base: 'USD',
+      rates: {
+        INR: 87.25,
+        EUR: 0.925,
+        GBP: 0.782,
+        JPY: 152.4,
+        CAD: 1.378,
+        AUD: 1.534,
+        SGD: 1.341,
+        AED: 3.673,
+      },
+    },
+    fiatToInr: {
+      USD: 87.25,
+      EUR: 94.32,
+      GBP: 111.57,
+      JPY: 0.572,
+      CAD: 63.31,
+      AUD: 56.87,
+      SGD: 65.06,
+      AED: 23.75,
+      INR: 1.0,
+    },
+    satsPerInr: 13.10,
+    inrPerSat: 0.07631,
+    source: 'initial-state',
+    cached: false,
+  };
+
+  let lastRatesFetchTimestamp = 0;
+  const RATES_CACHE_TTL_MS = 30000; // 30 seconds server-side in-memory cache
+
+  async function getLiveRates(): Promise<LiveRatesResponse> {
+    const now = Date.now();
+    // Return cached rates if within TTL
+    if (now - lastRatesFetchTimestamp < RATES_CACHE_TTL_MS && lastRatesFetchTimestamp > 0) {
+      return {
+        ...cachedRatesData,
+        cached: true,
+      };
+    }
+
+    let btcUpdated = false;
+    let mempoolUpdated = false;
+    let fiatUpdated = false;
+
+    // 1. Fetch Bitcoin prices from CoinGecko API
+    try {
+      const cgResponse = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,inr&include_24hr_change=true',
+        {
+          headers: { Accept: 'application/json' },
+          signal: AbortSignal.timeout(5000),
+        }
+      );
+
+      if (cgResponse.ok) {
+        const cgData = (await cgResponse.json()) as any;
+        if (cgData && cgData.bitcoin) {
+          const usd = Number(cgData.bitcoin.usd) || cachedRatesData.btcUsd;
+          const inr = Number(cgData.bitcoin.inr) || cachedRatesData.btcInr;
+          const usdChange = typeof cgData.bitcoin.usd_24h_change === 'number'
+            ? Number(cgData.bitcoin.usd_24h_change.toFixed(2))
+            : cachedRatesData.bitcoin.usd_24h_change;
+          const inrChange = typeof cgData.bitcoin.inr_24h_change === 'number'
+            ? Number(cgData.bitcoin.inr_24h_change.toFixed(2))
+            : cachedRatesData.btc24hChangeInr;
+
+          const derivedUsdInr = usd > 0 ? Number((inr / usd).toFixed(2)) : cachedRatesData.usdInr;
+
+          cachedRatesData.btcUsd = usd;
+          cachedRatesData.btcInr = inr;
+          cachedRatesData.usdInr = derivedUsdInr;
+          cachedRatesData.btc24hChangeInr = inrChange;
+
+          cachedRatesData.bitcoin = {
+            usd,
+            inr,
+            usd_24h_change: usdChange,
+            inr_24h_change: inrChange,
+          };
+          cachedRatesData.satsPerInr = Number((100000000 / inr).toFixed(2));
+          cachedRatesData.inrPerSat = Number((inr / 100000000).toFixed(4));
+          btcUpdated = true;
+        }
+      }
+    } catch (cgError) {
+      console.warn('CoinGecko price fetch warning (using cached):', cgError);
+    }
+
+    // 2. Fetch Recommended Network Fees from mempool.space
+    try {
+      const mempoolResponse = await fetch(
+        'https://mempool.space/api/v1/fees/recommended',
+        {
+          headers: { Accept: 'application/json' },
+          signal: AbortSignal.timeout(5000),
+        }
+      );
+
+      if (mempoolResponse.ok) {
+        const mempoolData = (await mempoolResponse.json()) as any;
+        if (mempoolData) {
+          const gasSatVb = Number(mempoolData.halfHourFee || mempoolData.fastestFee || mempoolData.hourFee) || cachedRatesData.gasSatVb;
+          cachedRatesData.gasSatVb = gasSatVb;
+          mempoolUpdated = true;
+        }
+      }
+    } catch (mempoolError) {
+      console.warn('mempool.space fees fetch warning (using cached):', mempoolError);
+    }
+
+    // 3. Fetch fiat currency rates from Frankfurter API
+    try {
+      const frankResponse = await fetch(
+        'https://api.frankfurter.app/latest?from=USD&to=INR,EUR,GBP,JPY,CAD,AUD,SGD,AED',
+        {
+          headers: { Accept: 'application/json' },
+          signal: AbortSignal.timeout(5000),
+        }
+      );
+
+      if (frankResponse.ok) {
+        const frankData = (await frankResponse.json()) as any;
+        if (frankData && frankData.rates && frankData.rates.INR) {
+          const inrRate = Number(frankData.rates.INR);
+          const rawRates: Record<string, number> = {
+            INR: inrRate,
+            EUR: Number(frankData.rates.EUR) || 0.925,
+            GBP: Number(frankData.rates.GBP) || 0.782,
+            JPY: Number(frankData.rates.JPY) || 152.4,
+            CAD: Number(frankData.rates.CAD) || 1.378,
+            AUD: Number(frankData.rates.AUD) || 1.534,
+            SGD: Number(frankData.rates.SGD) || 1.341,
+            AED: Number(frankData.rates.AED) || 3.673,
+          };
+
+          const calculatedFiatToInr: Record<string, number> = {
+            USD: Number(inrRate.toFixed(2)),
+            INR: 1.0,
+            EUR: Number((inrRate / rawRates.EUR).toFixed(2)),
+            GBP: Number((inrRate / rawRates.GBP).toFixed(2)),
+            JPY: Number((inrRate / rawRates.JPY).toFixed(3)),
+            CAD: Number((inrRate / rawRates.CAD).toFixed(2)),
+            AUD: Number((inrRate / rawRates.AUD).toFixed(2)),
+            SGD: Number((inrRate / rawRates.SGD).toFixed(2)),
+            AED: Number((inrRate / rawRates.AED).toFixed(2)),
+          };
+
+          cachedRatesData.fiat = {
+            base: 'USD',
+            rates: rawRates,
+          };
+          cachedRatesData.fiatToInr = calculatedFiatToInr;
+          fiatUpdated = true;
+        }
+      }
+    } catch (frankError) {
+      console.warn('Frankfurter fiat fetch warning (using cached):', frankError);
+    }
+
+    if (btcUpdated || mempoolUpdated || fiatUpdated || lastRatesFetchTimestamp === 0) {
+      cachedRatesData.lastUpdated = new Date().toISOString();
+      cachedRatesData.source = `${btcUpdated ? 'coingecko' : 'cached-btc'}+${mempoolUpdated ? 'mempool' : 'cached-gas'}+${fiatUpdated ? 'frankfurter' : 'cached-fx'}`;
+      lastRatesFetchTimestamp = now;
+    }
+
+    return {
+      ...cachedRatesData,
+      cached: false,
+    };
+  }
+
+  // API Route: Live Rates Endpoint
+  app.get('/api/rates', async (req, res) => {
+    try {
+      const data = await getLiveRates();
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30, public');
+      return res.json(data);
+    } catch (error: any) {
+      console.error('Error in /api/rates handler:', error);
+      // Return cached fallback on any upstream failure without erroring
+      return res.json({
+        ...cachedRatesData,
+        source: 'error-fallback',
+        error: error?.message,
+      });
+    }
+  });
+
+  // API Route: Gemini Chatbot for SAT DCX FinTech & Sovereign Education
   app.post('/api/chat', async (req, res) => {
     try {
       const { message, topic } = req.body;
@@ -53,8 +286,8 @@ async function startServer() {
         });
       }
 
-      const systemInstruction = `You are SATCONNECT AI Copilot, a helpful, precise, and expert Bitcoin & Lightning FinTech advisor.
-SATCONNECT is India's first sovereign Bitcoin & Lightning superlayer with 6 pillars:
+      const systemInstruction = `You are SAT DCX AI Copilot, a helpful, precise, and expert Bitcoin & Lightning FinTech advisor.
+SAT DCX is India's first sovereign Bitcoin & Lightning superlayer with 6 pillars:
 1. Universal Handles (@name) for LNURL, on-chain, and instant Indian UPI merchant QR settlement (zero forced liquidations, zero auto-sell).
 2. AI Payment Firewall: Pre-flight scam detection, invoice tampering prevention, and threat telemetry.
 3. UTXO DustGuard: Mempool gas forecasting, quarantining un-economical UTXOs, and batch consolidation during low-fee windows.
@@ -108,7 +341,7 @@ Respond clearly, concisely, and accurately. Explain technical concepts simply us
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`SATCONNECT Server running on http://0.0.0.0:${PORT}`);
+    console.log(`SAT DCX Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
@@ -126,7 +359,7 @@ The **AI Payment Firewall** acts as a pre-flight cryptographic shield before any
 
   if (q.includes('upi') || q.includes('bridge') || q.includes('merchant') || q.includes('pay')) {
     return `### ⚡ Instant UPI ↔ Lightning Bridge
-SATCONNECT seamlessly bridges Lightning channels directly to Indian merchant UPI QRs:
+SAT DCX seamlessly bridges Lightning channels directly to Indian merchant UPI QRs:
 
 1. **Instant QR Scanning**: Scan any standard BharatPe, Paytm, PhonePe, or GooglePay QR code.
 2. **Sub-second Atomic Swap**: Your Lightning sats are converted via non-custodial liquidity routing in ~1.4 seconds.
@@ -162,7 +395,7 @@ Universal Handles replace 64-character hexadecimal public keys and complex LNURL
 
   if (q.includes('multisig') || q.includes('custody') || q.includes('key')) {
     return `### 🔐 2-of-3 Multisig Threshold Vault
-For high-value sovereign reserves, SATCONNECT provides an intuitive 2-of-3 threshold signature architecture:
+For high-value sovereign reserves, SAT DCX provides an intuitive 2-of-3 threshold signature architecture:
 
 1. **Key 1 (Mobile Enclave)**: Stored securely in your device's biometric secure enclave.
 2. **Key 2 (Cold Hardware)**: Stored offline on your Ledger, Trezor, Coldcard, or SeedSigner.
@@ -170,8 +403,8 @@ For high-value sovereign reserves, SATCONNECT provides an intuitive 2-of-3 thres
 Any spending requires 2 out of 3 signatures, eliminating any single point of failure or physical coercion.`;
   }
 
-  return `### ⚡ Welcome to SATCONNECT
-SATCONNECT is India's sovereign Bitcoin & Lightning financial infrastructure superlayer.
+  return `### ⚡ Welcome to SAT DCX
+SAT DCX is India's sovereign Bitcoin & Lightning financial infrastructure superlayer.
 
 - **Universal Identity**: Transact via clean \`@handle\` addressing.
 - **AI Payment Firewall**: Real-time scam and invoice tampering interception.

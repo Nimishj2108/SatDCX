@@ -42,7 +42,7 @@ export const AIRouteIntelligenceSection: React.FC = () => {
             Intelligent Route Selection. <span className="text-blue-600">Zero Payment Stalls.</span>
           </h2>
           <p className="mt-3 text-base text-slate-600 leading-relaxed">
-            Payment failures on the Lightning Network happen when intermediary hops lack channel liquidity. SATCONNECT AI continuously evaluates global gossip topology, latency, and channel buffers to route payments with the highest probability of success.
+            Payment failures on the Lightning Network happen when intermediary hops lack channel liquidity. SAT DCX AI continuously evaluates global gossip topology, latency, and channel buffers to route payments with the highest probability of success.
           </p>
         </div>
 

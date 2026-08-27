@@ -144,7 +144,7 @@ export const SuperlayerOverview: React.FC = () => {
             One Coherent Ecosystem. Six Core Layers.
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            SATCONNECT is not twelve disconnected tools. It is a unified financial operating superlayer designed to make Bitcoin secure, intelligent, and effortless for everyday humans.
+            SAT DCX is not twelve disconnected tools. It is a unified financial operating superlayer designed to make Bitcoin secure, intelligent, and effortless for everyday humans.
           </p>
         </div>
 

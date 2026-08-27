@@ -18,15 +18,34 @@ import {
   Sliders,
   DollarSign
 } from 'lucide-react';
-import { getLatestMarketData } from '../../services/livePriceService';
+import { motion } from 'motion/react';
+import { useLiveRates } from '../../services/livePriceService';
 import { BitcoinDustbinState, UtxoItem } from '../../types';
+import { SkeletonDustGuard } from '../common/ShimmerSkeleton';
 
 export const DustGuardPage: React.FC = () => {
-  const [marketRate, setMarketRate] = useState(8392400); // 1 BTC = ₹83,92,400
+  const liveRates = useLiveRates();
+  const marketRate = liveRates.btcInr || 8552190;
   const [inputInr, setInputInr] = useState<number>(150);
   const [autoDepositDustbin, setAutoDepositDustbin] = useState<boolean>(true);
   const [isClubbingProcessing, setIsClubbingProcessing] = useState<boolean>(false);
   const [clubSuccessMsg, setClubSuccessMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
 
   // Dustbin Live State
   const [dustbinState, setDustbinState] = useState<BitcoinDustbinState>({
@@ -91,13 +110,6 @@ export const DustGuardPage: React.FC = () => {
       feeToSpendSats: 360,
     },
   ]);
-
-  useEffect(() => {
-    const market = getLatestMarketData();
-    if (market.btcInr) {
-      setMarketRate(market.btcInr);
-    }
-  }, []);
 
   // Calculate Satoshi amount from Rupee input
   const convertedSats = Math.round((inputInr / marketRate) * 100000000);
@@ -175,28 +187,49 @@ export const DustGuardPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Live Mempool Fee Window */}
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-            <Flame className="w-5 h-5 text-orange-300" />
-          </div>
-          <div>
-            <div className="text-[11px] font-mono text-slate-500 uppercase font-semibold">
-              Current Mempool Fee
+        <div className="flex items-center gap-3 self-start md:self-auto">
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-bold transition-all cursor-pointer disabled:opacity-50"
+            title="Scan UTXO set for dust"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-orange-600' : ''}`} />
+            <span>{isRefreshing ? 'Scanning...' : 'Scan UTXOs'}</span>
+          </button>
+
+          {/* Live Mempool Fee Window */}
+          <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+              <Flame className="w-5 h-5 text-orange-300" />
             </div>
-            <div className="text-sm font-bold font-mono text-slate-900">
-              12 sat/vB <span className="text-xs text-emerald-600 font-semibold">(Low Fee Window)</span>
+            <div>
+              <div className="text-[11px] font-mono text-slate-500 uppercase font-semibold">
+                Current Mempool Fee
+              </div>
+              <div className="text-sm font-bold font-mono text-slate-900">
+                12 sat/vB <span className="text-xs text-emerald-600 font-semibold">(Low Fee Window)</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {clubSuccessMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3 animate-fadeIn">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span className="font-medium">{clubSuccessMsg}</span>
-        </div>
-      )}
+      {isLoading || isRefreshing ? (
+        <SkeletonDustGuard />
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="space-y-6"
+        >
+          {clubSuccessMsg && (
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3 animate-fadeIn">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span className="font-medium">{clubSuccessMsg}</span>
+            </div>
+          )}
 
       {/* Main Grid: Interactive Dust Generator vs Sovereign Dustbin Pool */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -386,7 +419,7 @@ export const DustGuardPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
-                Instead of paying 300+ sats on-chain for each micro-dust output, SATCONNECT clubs your collected dust into your next larger transaction as handling credit or routes it through a zero-fee Lightning mesh channel!
+                Instead of paying 300+ sats on-chain for each micro-dust output, SAT DCX clubs your collected dust into your next larger transaction as handling credit or routes it through a zero-fee Lightning mesh channel!
               </p>
 
               <button
@@ -415,7 +448,7 @@ export const DustGuardPage: React.FC = () => {
               <span>Why Does Bitcoin Dust Matter for UPI Payments?</span>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              When buying ₹20 milk or ₹100 coffee in India, converting fiat to Bitcoin on-chain creates micro-change outputs that cost more to spend than they are worth. SATCONNECT solves this through the <strong>Bitcoin Dustbin</strong>, where dust is swept instantly and clubbed into larger transactions using Lightning intelligence.
+              When buying ₹20 milk or ₹100 coffee in India, converting fiat to Bitcoin on-chain creates micro-change outputs that cost more to spend than they are worth. SAT DCX solves this through the <strong>Bitcoin Dustbin</strong>, where dust is swept instantly and clubbed into larger transactions using Lightning intelligence.
             </p>
           </div>
         </div>
@@ -510,6 +543,8 @@ export const DustGuardPage: React.FC = () => {
           </table>
         </div>
       </div>
-    </div>
+    </motion.div>
+    )}
+  </div>
   );
 };

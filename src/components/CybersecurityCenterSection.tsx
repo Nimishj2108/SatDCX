@@ -22,7 +22,7 @@ export const CybersecurityCenterSection: React.FC = () => {
 
   const segwitAddress = 'bc1q9x8w7v6u5t4s3r2q1p0o9n8m7l6k5j4h3g2f1a';
   const taprootAddress = 'bc1p8k7j6h5g4f3d2s1a0z9y8x7w6v5u4t3s2r1q0p';
-  const lightningAddress = 'nimish@satconnect.me';
+  const lightningAddress = 'nimish@satdcx.me';
   const securityPin = '1234';
 
   const handleCopy = (text: string, fieldName: string) => {

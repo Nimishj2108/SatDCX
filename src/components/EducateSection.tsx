@@ -47,7 +47,7 @@ export const EducateSection: React.FC = () => {
             <span className="text-rose-400">Never a Boring Blog.</span>
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            We don&apos;t dump 40-page whitepapers on first-time users. SATCONNECT contextualizes every transaction, fee, and risk score in real time so you master sovereign Bitcoin finance by simply using it.
+            We don&apos;t dump 40-page whitepapers on first-time users. SAT DCX contextualizes every transaction, fee, and risk score in real time so you master sovereign Bitcoin finance by simply using it.
           </p>
         </div>
 

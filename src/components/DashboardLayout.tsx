@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Zap, 
   LayoutDashboard, 
@@ -27,10 +28,12 @@ import {
   Building2,
   Lock,
   Coins,
-  Globe2
+  Globe2,
+  BadgeCheck
 } from 'lucide-react';
 import { UserProfile, DashboardPageType } from '../types';
 import { LivePriceTicker } from './LivePriceTicker';
+import { BitcoinWalletUIModal } from './BitcoinWalletUIModal';
 
 interface DashboardLayoutProps {
   user: UserProfile;
@@ -51,7 +54,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showKycTooltip, setShowKycTooltip] = useState(false);
   const [showQuickPayModal, setShowQuickPayModal] = useState(false);
+  const [showBitcoinUIModal, setShowBitcoinUIModal] = useState(false);
+  const [bitcoinUIInitialView, setBitcoinUIInitialView] = useState<'transact' | 'received' | 'deposit' | 'security' | 'cloud_backup' | 'pin_entry'>('transact');
   const [quickPayAddress, setQuickPayAddress] = useState('chaiwali@okhdfcbank');
   const [quickPayAmount, setQuickPayAmount] = useState('120');
   const [quickPaySuccess, setQuickPaySuccess] = useState(false);
@@ -173,7 +179,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 </div>
                 <div>
                   <span className="text-base font-bold font-mono tracking-tight text-white block leading-none">
-                    SAT<span className="text-orange-400">CONNECT</span>
+                    SAT<span className="text-orange-400"> DCX</span>
                   </span>
                   <span className="text-[9px] font-mono text-slate-400 font-semibold tracking-wider block mt-0.5">
                     SOVEREIGN SUPERLAYER
@@ -318,6 +324,21 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             {/* Header Right Actions */}
             <div className="flex items-center gap-3">
+              {/* Bitcoin UI Kit Keypad Transact Button (Figma Prototype) */}
+              <button
+                type="button"
+                id="header-bitcoin-ui-btn"
+                onClick={() => {
+                  setBitcoinUIInitialView('transact');
+                  setShowBitcoinUIModal(true);
+                }}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#F7931A] hover:bg-[#e08213] text-white text-xs font-bold transition-all shadow-sm shadow-orange-500/20 cursor-pointer"
+                title="Open Bitcoin Wallet UI Kit (Keypad / Transact / PIN)"
+              >
+                <span className="text-sm font-extrabold">₿</span>
+                <span>Transact (Keypad)</span>
+              </button>
+
               {/* Notification Bell */}
               <div className="relative">
                 <button
@@ -355,10 +376,100 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </div>
 
               {/* Sovereign Status Pill */}
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-semibold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Sovereign Enclave Active</span>
               </div>
+
+              {/* Verified Status Badge with KYC Level Tooltip for Indian Users */}
+              {!isForeigner && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    id="kyc-verified-badge-btn"
+                    onMouseEnter={() => setShowKycTooltip(true)}
+                    onMouseLeave={() => setShowKycTooltip(false)}
+                    onClick={() => setShowKycTooltip(!showKycTooltip)}
+                    aria-label="View Indian KYC Verification Status"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-mono font-bold transition-all shadow-xs cursor-pointer group"
+                  >
+                    <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0 group-hover:scale-110 transition-transform" />
+                    <span className="hidden sm:inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>{user.accountType === 'business' ? 'KYC Lvl 3' : 'KYC Lvl 2'}</span>
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-600 text-white uppercase tracking-wider font-extrabold shadow-xs">
+                      Verified
+                    </span>
+                  </button>
+
+                  {/* KYC Details Tooltip Popup */}
+                  <AnimatePresence>
+                    {showKycTooltip && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-80 sm:w-92 bg-slate-900 text-white rounded-2xl border border-emerald-500/30 shadow-2xl p-4 z-50 text-xs space-y-3 font-sans"
+                      >
+                        <div className="flex items-center justify-between pb-2.5 border-b border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                              <BadgeCheck className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <div className="font-extrabold text-white text-xs">
+                                {user.accountType === 'business' ? 'Corporate Treasury Verified' : 'Full Sovereign e-KYC Verified'}
+                              </div>
+                              <div className="text-[10px] font-mono text-emerald-400">
+                                {user.accountType === 'business' ? 'Level 3 · Multi-Sig Quorum Verified' : 'Level 2 · DigiLocker & NSDL PAN Validated'}
+                              </div>
+                            </div>
+                          </div>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold">
+                            ● KYC Verified
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 text-[11px] text-slate-300">
+                          <div className="flex items-start gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                            <div>
+                              <strong className="text-white">Credentials Verified:</strong>{' '}
+                              {user.accountType === 'business'
+                                ? 'MCA CIN, GSTIN 27AAACS1429B, and 3-of-5 Director Multi-Sig threshold attested.'
+                                : 'UIDAI DigiLocker Aadhaar XML OTP + Instant NSDL Income Tax PAN Match.'}
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                            <div>
+                              <strong className="text-white">Daily UPI Settlement Limit:</strong>{' '}
+                              <span className="font-mono text-emerald-400 font-bold">
+                                {user.accountType === 'business' ? '₹20,00,000 / day' : '₹5,00,000 / day'}
+                              </span>{' '}
+                              (Zero custodial hold, peer-to-peer Lightning routing).
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                            <div>
+                              <strong className="text-white">100% Non-Custodial Enclave:</strong>{' '}
+                              Your private keys stay strictly in your local device enclave. SAT DCX holds zero custody.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                          <span>FIU-IND Compliance Ready</span>
+                          <span className="text-emerald-400 font-bold">Ref: SAT-KYC-IND-9842</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
 
               {/* User Handle Pill */}
               <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
@@ -450,6 +561,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
         </div>
       )}
+
+      {/* Bitcoin Wallet UI Kit Modal (Figma Design System) */}
+      <BitcoinWalletUIModal
+        isOpen={showBitcoinUIModal}
+        onClose={() => setShowBitcoinUIModal(false)}
+        user={user}
+        initialView={bitcoinUIInitialView}
+      />
     </div>
   );
 };

@@ -37,7 +37,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
       {
         slideNumber: 1,
         title: 'Pre-Flight Static & Behavioral Inspection',
-        subtitle: 'How SATCONNECT blocks malicious Lightning & UPI invoices before mempool broadcast.',
+        subtitle: 'How SAT DCX blocks malicious Lightning & UPI invoices before mempool broadcast.',
         categoryBadge: '01 · THREAT INTERCEPTION',
         keyPoints: [
           'Pre-flight cryptographic signature audit ensures node reputation is verified.',
@@ -56,7 +56,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
       {
         slideNumber: 2,
         title: 'Cryptographic Guarantees & Zero-Loss Liability',
-        subtitle: 'Comparing traditional web3 wallet risks with SATCONNECT Sovereign AI Firewall.',
+        subtitle: 'Comparing traditional web3 wallet risks with SAT DCX Sovereign AI Firewall.',
         categoryBadge: '02 · SOVEREIGN ASSURANCE',
         keyPoints: [
           'Eliminates blind-signing vulnerabilities prevalent in standard custodial and browser extensions.',
@@ -65,7 +65,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         ],
         statComparison: {
           metric: 'Blind Phishing Exploit Loss',
-          satconnectValue: '0.00% (Guaranteed Pre-Flight Quarantine)',
+          satdcxValue: '0.00% (Guaranteed Pre-Flight Quarantine)',
           legacyValue: 'High ($2.4B lost in Web3 blind-signing)',
           insight: 'Pre-flight AI screening catches malicious invoices before cryptographic commitment.',
         },
@@ -101,7 +101,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
       {
         slideNumber: 2,
         title: 'Zero Forced Liquidation & Non-Custodial Edge',
-        subtitle: 'Why SATCONNECT preserves your sovereign Bitcoin stack.',
+        subtitle: 'Why SAT DCX preserves your sovereign Bitcoin stack.',
         categoryBadge: '02 · FINTECH COMPARISON',
         keyPoints: [
           'No KYC custodian holds your reserve balance; sats stay in your own SegWit / Lightning keys.',
@@ -110,7 +110,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         ],
         statComparison: {
           metric: 'Average Retail Settlement Latency',
-          satconnectValue: '1.4 seconds (Instant Soundbox Receipt)',
+          satdcxValue: '1.4 seconds (Instant Soundbox Receipt)',
           legacyValue: '10-60 mins (Custodial on-chain or slow withdraw)',
           insight: 'Direct Lightning-to-UPI liquidity bridges provide true cash-like speed for Bitcoin.',
         },
@@ -131,7 +131,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         categoryBadge: '01 · UTXO MANAGEMENT',
         keyPoints: [
           'Small UTXOs (<10,000 sats) cost more in mining fees to spend than their value when gas spikes.',
-          'SATCONNECT DustGuard automatically detects and quarantines toxic micro-dust outputs.',
+          'SAT DCX DustGuard automatically detects and quarantines toxic micro-dust outputs.',
           'Prevents accidental wallet poisoning attacks where attackers link your addresses.',
           'Continuously calculates break-even spendability based on live Bitcoin Core mempool depth.',
         ],
@@ -155,7 +155,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         ],
         statComparison: {
           metric: 'Lifetime Transaction Fee Savings',
-          satconnectValue: 'Up to 85% saved via automated batching',
+          satdcxValue: 'Up to 85% saved via automated batching',
           legacyValue: 'Standard wallets blindly spend high-fee UTXOs',
           insight: 'Batching 8 fragmented UTXOs into 1 output saves thousands of satoshis in lifetime fees.',
         },
@@ -195,12 +195,12 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         categoryBadge: '02 · RISK MODELING',
         keyPoints: [
           'Centralized yield platforms lend out your coins and get liquidated in crashes.',
-          'SATCONNECT Smart Vault holds 100% unleveraged spot Bitcoin in self-custody.',
+          'SAT DCX Smart Vault holds 100% unleveraged spot Bitcoin in self-custody.',
           'Live drawdown stress tester shows your recovery timeline across historical 4-year halving cycles.',
         ],
         statComparison: {
           metric: 'Forced Liquidation Risk',
-          satconnectValue: '0.00% (Pure Spot Non-Custodial Ownership)',
+          satdcxValue: '0.00% (Pure Spot Non-Custodial Ownership)',
           legacyValue: 'High on centralized yield / margin lending apps',
           insight: 'You own 100% of the private keys, making forced liquidation mathematically impossible.',
         },
@@ -240,12 +240,12 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         categoryBadge: '02 · INTEROPERABILITY',
         keyPoints: [
           'Fully compliant with LNURL-pay (LUD-06), Lightning Address (LUD-16), and BIP-353 DNS resolution.',
-          'Send from Phoenix, Zeus, CashApp, Strike, or Blink directly to your SATCONNECT handle.',
+          'Send from Phoenix, Zeus, CashApp, Strike, or Blink directly to your SAT DCX handle.',
           'Zero platform lock-in; handles can be exported and migrated anytime.',
         ],
         statComparison: {
           metric: 'Invoice Input Complexity',
-          satconnectValue: '12 characters (@nimish.sat)',
+          satdcxValue: '12 characters (@nimish.sat)',
           legacyValue: '150+ chars (lnbc10u1p3... string mess)',
           insight: 'Human-readable handles eliminate fat-finger transfer errors and invoice expirations.',
         },
@@ -271,7 +271,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
           'Key 3: Encrypted Social / Timelocked Shard (for disaster emergency recovery).',
         ],
         diagramSteps: [
-          { stepNumber: '1', title: 'Spend Request', description: 'User initiates vault transfer in SATCONNECT app' },
+          { stepNumber: '1', title: 'Spend Request', description: 'User initiates vault transfer in SAT DCX app' },
           { stepNumber: '2', title: 'Key 1 Signed', description: 'Biometric FaceID signs first shard', highlight: true },
           { stepNumber: '3', title: 'Key 2 Signed', description: 'Air-gapped hardware wallet signs second shard' },
           { stepNumber: '4', title: 'Broadcast', description: '2-of-3 quorum met and SegWit transaction broadcasts' },
@@ -290,7 +290,7 @@ const PRESENTATIONS_DB: Record<string, PresentationData> = {
         ],
         statComparison: {
           metric: 'Single Key Compromise Vulnerability',
-          satconnectValue: '0% Risk (Requires 2 independent signers)',
+          satdcxValue: '0% Risk (Requires 2 independent signers)',
           legacyValue: '100% Loss on single seed phrase leak',
           insight: 'Threshold signatures distribute risk across independent cryptographic hardware.',
         },
@@ -441,7 +441,7 @@ export const GeminiChatbot: React.FC = () => {
       });
 
       const data = await res.json();
-      const botText = data.text || 'Here is the detailed analysis from SATCONNECT AI Copilot.';
+      const botText = data.text || 'Here is the detailed analysis from SAT DCX AI Copilot.';
 
       const botMsg: ChatMessage = {
         id: `msg-${Date.now()}-bot`,
@@ -460,7 +460,7 @@ export const GeminiChatbot: React.FC = () => {
       const botMsg: ChatMessage = {
         id: `msg-${Date.now()}-bot`,
         sender: 'assistant',
-        text: `### ⚡ SATCONNECT AI Intelligence\nHere is a comprehensive breakdown of ${userText}.\n\nSATCONNECT powers self-custodial Bitcoin and Lightning finance with zero forced liquidations and sub-second settlement. Click the interactive presentation button below to explore visual slides!`,
+        text: `### ⚡ SAT DCX AI Intelligence\nHere is a comprehensive breakdown of ${userText}.\n\nSAT DCX powers self-custodial Bitcoin and Lightning finance with zero forced liquidations and sub-second settlement. Click the interactive presentation button below to explore visual slides!`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         topic: matchedTopic,
         hasPresentation: true,
@@ -505,7 +505,7 @@ export const GeminiChatbot: React.FC = () => {
             className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 text-slate-800 border border-slate-200 shadow-xl text-xs font-semibold backdrop-blur-md cursor-pointer hover:border-blue-400 hover:shadow-2xl transition-all animate-in fade-in slide-in-from-bottom-2 group"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Ask SATCONNECT AI</span>
+            <span>Ask SAT DCX AI</span>
             <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 group-hover:bg-blue-600 group-hover:text-white transition-colors">
               Gemini
             </span>
@@ -551,7 +551,7 @@ export const GeminiChatbot: React.FC = () => {
               </div>
               <div>
                 <div className="text-xs font-bold font-mono flex items-center gap-1.5">
-                  <span>SATCONNECT AI COPILOT</span>
+                  <span>SAT DCX AI COPILOT</span>
                   <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     Gemini 3.7 Flash
                   </span>
@@ -716,7 +716,7 @@ export const GeminiChatbot: React.FC = () => {
               id="gemini-chat-input"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask anything about SATCONNECT..."
+              placeholder="Ask anything about SAT DCX..."
               className="flex-1 px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
             />
             <button
@@ -822,10 +822,10 @@ export const GeminiChatbot: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 space-y-1">
                           <span className="text-[11px] font-mono text-emerald-400 font-bold uppercase">
-                            SATCONNECT SUPERLAYER
+                            SAT DCX SUPERLAYER
                           </span>
                           <div className="text-lg font-bold font-mono text-emerald-300">
-                            {slide.statComparison.satconnectValue}
+                            {slide.statComparison.satdcxValue || slide.statComparison.satconnectValue}
                           </div>
                         </div>
 

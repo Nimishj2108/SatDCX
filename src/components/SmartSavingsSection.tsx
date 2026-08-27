@@ -51,7 +51,7 @@ export const SmartSavingsSection: React.FC = () => {
             <span className="text-indigo-400">Zero Speculation.</span>
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            Don&apos;t predict the market. Predict your risk. SATCONNECT analyzes your savings timeline, portfolio concentration, and 30-day volatility to keep your real-world goals safe — with 100% user-directed control and zero automated trades.
+            Don&apos;t predict the market. Predict your risk. SAT DCX analyzes your savings timeline, portfolio concentration, and 30-day volatility to keep your real-world goals safe — with 100% user-directed control and zero automated trades.
           </p>
         </div>
 
@@ -257,7 +257,7 @@ export const SmartSavingsSection: React.FC = () => {
                 <h4 className="text-xs font-bold text-white">Suggested Non-Custodial Action</h4>
                 <p className="text-[11px] text-slate-400 leading-snug mt-0.5">
                   {timeHorizonMonths < 6 && btcExposure > 70
-                    ? 'Consider manually reallocating a portion to your emergency reserve or scheduling user-approved milestone lockups. SATCONNECT will never auto-execute trades without your explicit cryptographic signature.'
+                    ? 'Consider manually reallocating a portion to your emergency reserve or scheduling user-approved milestone lockups. SAT DCX will never auto-execute trades without your explicit cryptographic signature.'
                     : 'Goal is currently well-balanced. Continue dollar-cost averaging into your self-custody vault.'}
                 </p>
               </div>

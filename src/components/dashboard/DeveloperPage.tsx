@@ -13,10 +13,10 @@ export const DeveloperPage: React.FC = () => {
             <span>DEVELOPER PORTAL &amp; REST / WEBSOCKET APIS</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900">
-            SATCONNECT API &amp; SDK Architecture
+            SAT DCX API &amp; SDK Architecture
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Build on top of SATCONNECT Superlayer. Integrate Universal Handles, AI routing engines, and Firewall webhooks into any app.
+            Build on top of SAT DCX Superlayer. Integrate Universal Handles, AI routing engines, and Firewall webhooks into any app.
           </p>
         </div>
 

@@ -74,7 +74,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <div>
               <span className="text-xl font-extrabold font-mono text-slate-900 tracking-tight">
-                SAT<span className="text-orange-500">CONNECT</span>
+                SAT<span className="text-orange-500"> DCX</span>
               </span>
               <span className="hidden sm:inline-block ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 text-blue-800">
                 SUPERLAYER

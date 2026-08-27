@@ -53,7 +53,7 @@ export const UpiBridgeSection: React.FC = () => {
         <div className="mb-8 p-4 rounded-2xl bg-blue-50/60 border border-blue-200 flex items-start gap-3 text-xs text-slate-700 shadow-xs">
           <Shield className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong className="text-slate-900">Regulatory Architecture:</strong> SATCONNECT is a 100% non-custodial cryptographic layer. INR fiat payouts to merchant UPI handles settle via registered partner gateway rails, while your Bitcoin remains in your self-custody until instant invoice settlement.
+            <strong className="text-slate-900">Regulatory Architecture:</strong> SAT DCX is a 100% non-custodial cryptographic layer. INR fiat payouts to merchant UPI handles settle via registered partner gateway rails, while your Bitcoin remains in your self-custody until instant invoice settlement.
           </div>
         </div>
 

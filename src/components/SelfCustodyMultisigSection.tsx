@@ -63,7 +63,7 @@ export const SelfCustodyMultisigSection: React.FC = () => {
             <span className="text-amber-400">Your Keys. Your Control.</span>
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            True Bitcoin security means you never depend on a bank or centralized exchange. With SATCONNECT 2-of-3 Multisig, you eliminate single points of failure — even if your phone is stolen, your funds remain 100% safe.
+            True Bitcoin security means you never depend on a bank or centralized exchange. With SAT DCX 2-of-3 Multisig, you eliminate single points of failure — even if your phone is stolen, your funds remain 100% safe.
           </p>
         </div>
 

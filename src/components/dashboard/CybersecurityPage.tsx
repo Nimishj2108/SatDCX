@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Lock, 
@@ -20,7 +20,9 @@ import {
   HardDrive,
   ArrowRight
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { COMPATIBLE_WALLETS } from '../../data/mockData';
+import { SkeletonCybersecurity } from '../common/ShimmerSkeleton';
 
 export const CybersecurityPage: React.FC = () => {
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -28,12 +30,28 @@ export const CybersecurityPage: React.FC = () => {
   const [selectedWallet, setSelectedWallet] = useState(COMPATIBLE_WALLETS[0].id);
   const [channelSuccessMsg, setChannelSuccessMsg] = useState<string | null>(null);
   const [isRebalancing, setIsRebalancing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuditing, setIsAuditing] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleAudit = () => {
+    setIsAuditing(true);
+    setTimeout(() => {
+      setIsAuditing(false);
+    }, 550);
+  };
 
   // Address details
   const segwitAddress = 'bc1q9x8w7v6u5t4s3r2q1p0o9n8m7l6k5j4h3g2f1a';
   const taprootAddress = 'bc1p8k7j6h5g4f3d2s1a0z9y8x7w6v5u4t3s2r1q0p';
   const lightningNodePubkey = '02aa77bb88cc99dd00ee11ff2233445566778899aabbccddeeff001122334455';
-  const lightningAddress = 'nimish@satconnect.me';
+  const lightningAddress = 'nimish@satdcx.me';
   const securityPin = '1234';
 
   const handleCopy = (text: string, fieldName: string) => {
@@ -69,28 +87,49 @@ export const CybersecurityPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Security Health Badge */}
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
-            <Lock className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-[10px] font-mono text-emerald-700 uppercase font-bold">
-              Wallet Security Score
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+          <button
+            onClick={handleAudit}
+            disabled={isAuditing}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-bold transition-all cursor-pointer disabled:opacity-50"
+            title="Run security health audit"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isAuditing ? 'animate-spin text-emerald-600' : ''}`} />
+            <span>{isAuditing ? 'Auditing...' : 'Run Audit'}</span>
+          </button>
+
+          {/* Security Health Badge */}
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
+              <Lock className="w-5 h-5" />
             </div>
-            <div className="text-sm font-extrabold font-mono text-emerald-900">
-              99 / 100 · ENCRYPTED &amp; SAVED
+            <div>
+              <div className="text-[10px] font-mono text-emerald-700 uppercase font-bold">
+                Wallet Security Score
+              </div>
+              <div className="text-sm font-extrabold font-mono text-emerald-900">
+                99 / 100 · ENCRYPTED &amp; SAVED
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {channelSuccessMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3 animate-fadeIn">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span className="font-medium">{channelSuccessMsg}</span>
-        </div>
-      )}
+      {isLoading || isAuditing ? (
+        <SkeletonCybersecurity />
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="space-y-6"
+        >
+          {channelSuccessMsg && (
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3 animate-fadeIn">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span className="font-medium">{channelSuccessMsg}</span>
+            </div>
+          )}
 
       {/* Main Security Center Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -118,7 +157,7 @@ export const CybersecurityPage: React.FC = () => {
                 Your Bitcoin is 100% Secure, Encrypted &amp; Saved
               </div>
               <p className="text-[11px] text-slate-500 leading-relaxed mt-0.5">
-                SATCONNECT servers hold zero private keys. All cryptographic signatures happen locally in your secure client enclave or connected hardware device.
+                SAT DCX servers hold zero private keys. All cryptographic signatures happen locally in your secure client enclave or connected hardware device.
               </p>
             </div>
           </div>
@@ -328,6 +367,8 @@ export const CybersecurityPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
+    )}
+  </div>
   );
 };

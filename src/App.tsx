@@ -21,7 +21,7 @@ const DEFAULT_USER: UserProfile = {
   name: 'Nimish Jain',
   handle: '@nimish.sat',
   mobile: '+91 98765 43210',
-  email: 'nimish@satconnect.io',
+  email: 'nimish@satdcx.io',
   accountType: 'individual',
   nationality: 'indian',
   kycStatus: 'Verified',
@@ -31,7 +31,7 @@ const DEFAULT_USER: UserProfile = {
   channelsCount: 8,
   securityScore: 98,
   pin: '1234',
-  lightningAddress: 'nimish@satconnect.me',
+  lightningAddress: 'nimish@satdcx.me',
   memberSince: 'August 2026',
 };
 
@@ -46,7 +46,7 @@ export default function App() {
 
   // Check saved session
   useEffect(() => {
-    const savedAuth = localStorage.getItem('satconnect_auth_user');
+    const savedAuth = localStorage.getItem('satdcx_auth_user') || localStorage.getItem('satconnect_auth_user');
     if (savedAuth) {
       try {
         const parsed = JSON.parse(savedAuth);
@@ -76,7 +76,7 @@ export default function App() {
   const handleLoginSuccess = (authenticatedUser: UserProfile) => {
     setUser(authenticatedUser);
     setIsLoggedIn(true);
-    localStorage.setItem('satconnect_auth_user', JSON.stringify(authenticatedUser));
+    localStorage.setItem('satdcx_auth_user', JSON.stringify(authenticatedUser));
     setViewMode('dashboard');
     setActiveDashboardPage('overview');
   };
@@ -84,8 +84,8 @@ export default function App() {
   const handleCompleteTravelerSetup = (travelerUser: UserProfile, tripData: TripPlannerData) => {
     setUser(travelerUser);
     setIsLoggedIn(true);
-    localStorage.setItem('satconnect_auth_user', JSON.stringify(travelerUser));
-    localStorage.setItem('satconnect_traveler_trip', JSON.stringify(tripData));
+    localStorage.setItem('satdcx_auth_user', JSON.stringify(travelerUser));
+    localStorage.setItem('satdcx_traveler_trip', JSON.stringify(tripData));
     setForeignerModalOpen(false);
     setViewMode('dashboard');
     setActiveDashboardPage('pay-settle'); // Immediately direct traveler to the UPI & Fair Price scanner!
@@ -93,6 +93,8 @@ export default function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    localStorage.removeItem('satdcx_auth_user');
+    localStorage.removeItem('satdcx_traveler_trip');
     localStorage.removeItem('satconnect_auth_user');
     localStorage.removeItem('satconnect_traveler_trip');
     setViewMode('landing');

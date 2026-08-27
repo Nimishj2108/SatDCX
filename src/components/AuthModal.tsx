@@ -126,7 +126,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   // User form details
   const [fullName, setFullName] = useState('Nimish Jain');
   const [mobileNumber, setMobileNumber] = useState('9876543210');
-  const [email, setEmail] = useState('nimish@satconnect.io');
+  const [email, setEmail] = useState('nimish@satdcx.io');
   const [handle, setHandle] = useState('nimish.sat');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [pin, setPin] = useState('');
@@ -270,7 +270,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         name: fullName || (accountType === 'business' ? 'Krypton Technologies' : 'Sovereign Bitcoiner'),
         handle: cleanHandle,
         mobile: mobileNumber.startsWith('+91') ? mobileNumber : `+91 ${mobileNumber}`,
-        email: email || 'user@satconnect.io',
+        email: email || 'user@satdcx.io',
         accountType: accountType,
         nationality: nationality,
         isFirstTimeUser: isFirstTimeUser,
@@ -281,9 +281,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         channelsCount: accountType === 'business' ? 18 : 8,
         securityScore: 99,
         pin: pin,
-        lightningAddress: `${cleanHandle.replace('@', '')}@satconnect.me`,
-        segwitAddress: 'bc1qsatconnectsovereign...882x',
-        taprootAddress: 'bc1psatconnectvault...449m',
+        lightningAddress: `${cleanHandle.replace('@', '')}@satdcx.me`,
+        segwitAddress: 'bc1qsatdcxsovereign...882x',
+        taprootAddress: 'bc1psatdcxvault...449m',
         memberSince: 'August 2026',
         companyProfile: accountType === 'business' ? {
           ...DEMO_COMPANY_RECORD,
@@ -326,7 +326,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold font-mono tracking-tight">
-                SAT<span className="text-orange-400">CONNECT</span>
+                SAT<span className="text-orange-400"> DCX</span>
               </span>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/30 text-blue-200 border border-blue-400/30 ml-2">
                 100% SELF-CUSTODIAL
@@ -336,7 +336,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <p className="text-xs text-slate-300 font-medium">
               {mode === 'signup'
                 ? 'Scale Sovereign Handles & Multi-Sig Bitcoin Superlayer'
-                : 'Log in to your SATCONNECT Superlayer Financial Dashboard'}
+                : 'Log in to your SAT DCX Superlayer Financial Dashboard'}
             </p>
 
             {/* Mode Switcher Tabs */}
@@ -986,7 +986,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       <RefreshCw className="w-4 h-4 animate-spin" />
                     ) : (
                       <>
-                        <span>Launch SATCONNECT Sovereign Dashboard</span>
+                        <span>Launch SAT DCX Sovereign Dashboard</span>
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}

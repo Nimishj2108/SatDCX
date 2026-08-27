@@ -21,7 +21,7 @@ import {
   AlertCircle,
   Building2
 } from 'lucide-react';
-import { getLatestMarketData } from '../../services/livePriceService';
+import { useLiveRates } from '../../services/livePriceService';
 import { SAMPLE_PRICE_GOUGE_ITEMS, LIGHTNING_TRAVEL_NODES } from '../../data/mockData';
 import { PriceGougeAssessment, UserProfile } from '../../types';
 
@@ -31,13 +31,14 @@ interface PaySettlePageProps {
 
 export const PaySettlePage: React.FC<PaySettlePageProps> = ({ user }) => {
   const isForeigner = user?.nationality === 'foreign' || user?.nationality === 'foreigner';
+  const liveRates = useLiveRates();
 
   const [activeSendMode, setActiveSendMode] = useState<'dosra_wallet' | 'upi_merchant' | 'camera_scanner'>('camera_scanner');
   
   // Send form inputs
   const [recipientHandleOrAddress, setRecipientHandleOrAddress] = useState('sharmastore@okhdfcbank');
   const [sendAmountInr, setSendAmountInr] = useState<number>(200);
-  const [marketRate, setMarketRate] = useState(8392400); // 1 BTC = ₹83,92,400
+  const marketRate = liveRates.btcInr || 8552190;
   
   // Selected route option
   const [selectedRoute, setSelectedRoute] = useState<'channel_a' | 'channel_b' | 'channel_c'>('channel_a');
@@ -96,11 +97,6 @@ export const PaySettlePage: React.FC<PaySettlePageProps> = ({ user }) => {
     dustEliminatedSats: number;
     finalBlockReceipt: string;
   } | null>(null);
-
-  useEffect(() => {
-    const market = getLatestMarketData();
-    if (market.btcInr) setMarketRate(market.btcInr);
-  }, []);
 
   const sendAmountSats = Math.round((sendAmountInr / marketRate) * 100000000);
   const dustRiskThresholdSats = 546;

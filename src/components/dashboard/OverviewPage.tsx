@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   ArrowUpRight, 
@@ -14,10 +14,17 @@ import {
   Plane, 
   Scale, 
   Lock,
-  Coins
+  Coins,
+  Shield,
+  Cloud,
+  ArrowDown
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { UserProfile, DashboardPageType } from '../../types';
 import { TransactionHistorySection } from './TransactionHistorySection';
+import { BitcoinWalletUIModal } from '../BitcoinWalletUIModal';
+import { SkeletonOverview } from '../common/ShimmerSkeleton';
+import { useLiveRates } from '../../services/livePriceService';
 
 interface OverviewPageProps {
   user: UserProfile;
@@ -33,9 +40,89 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
   const isForeigner = user.nationality === 'foreign' || user.nationality === 'foreigner';
   const isBusiness = user.accountType === 'business';
   const company = user.companyProfile;
+  const liveRates = useLiveRates();
+
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showBitcoinUIModal, setShowBitcoinUIModal] = useState(false);
+  const [bitcoinUIInitialView, setBitcoinUIInitialView] = useState<'transact' | 'received' | 'deposit' | 'security' | 'cloud_backup' | 'pin_entry'>('transact');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const openBitcoinUI = (view: 'transact' | 'received' | 'deposit' | 'security' | 'cloud_backup' | 'pin_entry') => {
+    setBitcoinUIInitialView(view);
+    setShowBitcoinUIModal(true);
+  };
+
+  if (isInitialLoading) {
+    return <SkeletonOverview />;
+  }
 
   return (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className="space-y-6"
+    >
+      {/* ========================================================================= */}
+      {/* BITCOIN DESIGN SYSTEM QUICK ACTION STRIP (FIGMA PROTOTYPE INTEGRATION) */}
+      {/* ========================================================================= */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[#F7931A] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-orange-500/20">
+            ₿
+          </div>
+          <div>
+            <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>Bitcoin Design System Superlayer</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 font-bold">
+                100% Open-Source
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 font-mono">
+              Keypad Transacting • SegWit/Lightning Deposit • Encrypted Cloud Backup • Hardware PIN Enclave
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => openBitcoinUI('transact')}
+            className="px-3.5 py-2 rounded-xl bg-[#F7931A] hover:bg-[#e08213] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer transition-all"
+          >
+            <span>⚡ Sats Keypad</span>
+          </button>
+
+          <button
+            onClick={() => openBitcoinUI('deposit')}
+            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+          >
+            <QrCode className="w-3.5 h-3.5 text-slate-700" />
+            <span>Deposit QR</span>
+          </button>
+
+          <button
+            onClick={() => openBitcoinUI('received')}
+            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+          >
+            <ArrowDown className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Receipt &amp; Fees</span>
+          </button>
+
+          <button
+            onClick={() => openBitcoinUI('security')}
+            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all"
+          >
+            <Shield className="w-3.5 h-3.5 text-blue-600" />
+            <span>Backups &amp; PIN</span>
+          </button>
+        </div>
+      </div>
       {/* ========================================================================= */}
       {/* TOP WELCOME BANNER: DISTINCT FOR FOREIGN TOURIST vs INDIAN CITIZEN/CORP */}
       {/* ========================================================================= */}
@@ -336,6 +423,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 
       {/* Transaction History Component */}
       <TransactionHistorySection />
-    </div>
+
+      {/* Bitcoin Wallet UI Kit Prototype Modal */}
+      <BitcoinWalletUIModal
+        isOpen={showBitcoinUIModal}
+        onClose={() => setShowBitcoinUIModal(false)}
+        user={user}
+        initialView={bitcoinUIInitialView}
+      />
+    </motion.div>
   );
 };

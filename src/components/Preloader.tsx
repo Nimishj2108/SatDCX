@@ -11,7 +11,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'converging' | 'revealing' | 'ready'>('converging');
 
   const finish = () => {
-    sessionStorage.setItem('satconnect_preloaded_seen', 'true');
+    sessionStorage.setItem('satdcx_preloaded_seen', 'true');
     setIsVisible(false);
     if (typeof onComplete === 'function') {
       onComplete();
@@ -20,7 +20,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
 
   useEffect(() => {
     // Check if user has already seen preloader in this session
-    const hasSeen = sessionStorage.getItem('satconnect_preloaded_seen');
+    const hasSeen = sessionStorage.getItem('satdcx_preloaded_seen') || sessionStorage.getItem('satconnect_preloaded_seen');
     if (hasSeen) {
       setIsVisible(false);
       if (typeof onComplete === 'function') {
@@ -133,7 +133,7 @@ export const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
             >
               <div className="flex items-center justify-center gap-2 mb-2">
                 <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-mono">
-                  SAT<span className="text-amber-400">CONNECT</span>
+                  SAT <span className="text-amber-400">DCX</span>
                 </span>
               </div>
               <p className="text-sm font-medium text-slate-400 tracking-wide">

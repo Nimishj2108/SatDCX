@@ -112,7 +112,7 @@ export const Hero: React.FC<HeroProps> = ({ onConnectWallet, onLaunchSandbox }) 
                   <div className="w-3 h-3 rounded-full bg-amber-500" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500" />
                   <span className="text-xs font-mono font-bold ml-2 text-slate-200">
-                    SATCONNECT MESH v3.2
+                    SAT DCX MESH v3.2
                   </span>
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
@@ -136,7 +136,7 @@ export const Hero: React.FC<HeroProps> = ({ onConnectWallet, onLaunchSandbox }) 
                     </span>
                   </div>
                   <div className="text-[11px] text-slate-600 truncate">
-                    LNURL: nimish@satconnect.me
+                    LNURL: nimish@satdcx.me
                   </div>
                 </div>
 

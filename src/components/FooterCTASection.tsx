@@ -89,7 +89,7 @@ export const FooterCTASection: React.FC = () => {
                 <Zap className="w-4 h-4 fill-slate-950" />
               </div>
               <span className="font-extrabold text-lg text-white font-mono tracking-wider">
-                SATCONNECT
+                SAT DCX
               </span>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs max-w-sm">
@@ -160,13 +160,13 @@ export const FooterCTASection: React.FC = () => {
         {/* Mandatory Regulatory & Legal Compliance Disclaimer */}
         <div className="pt-8 text-[11px] text-slate-400 space-y-3 leading-relaxed">
           <p>
-            <strong>Regulatory &amp; Architectural Disclaimer:</strong> SATCONNECT is an open-source non-custodial financial technology superlayer. SATCONNECT does not hold, custody, or manage user funds, private keys, or digital assets at any time. SATCONNECT is not a bank, exchange, regulated payment service provider, or licensed deposit-taking institution. All cryptographic actions and state transitions require explicit local signature by the user&apos;s self-custodied keys.
+            <strong>Regulatory &amp; Architectural Disclaimer:</strong> SAT DCX is an open-source non-custodial financial technology superlayer. SAT DCX does not hold, custody, or manage user funds, private keys, or digital assets at any time. SAT DCX is not a bank, exchange, regulated payment service provider, or licensed deposit-taking institution. All cryptographic actions and state transitions require explicit local signature by the user&apos;s self-custodied keys.
           </p>
           <p>
             Any cross-rail settlement simulations (such as Lightning → UPI) represent prototype demonstrations operating in conjunction with licensed local payment partners in compliant jurisdictions.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-900 font-mono text-[10px] text-slate-400">
-            <span>© 2026 SATCONNECT. Sovereign Bitcoin Infrastructure.</span>
+            <span>© 2026 SAT DCX. Sovereign Bitcoin Infrastructure.</span>
             <span>Zero-Custody Guaranteed · BIP-67 Compliant</span>
           </div>
         </div>

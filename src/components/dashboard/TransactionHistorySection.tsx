@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ArrowUpRight, 
   ArrowDownLeft, 
@@ -25,6 +25,7 @@ import {
   FileText
 } from 'lucide-react';
 import { FullTransactionActivity, TxActivityType, TxActivityStatus, TxRiskLevel } from '../../types';
+import { ShimmerBlock, SkeletonTransactionRow, SkeletonMetricCard } from '../common/ShimmerSkeleton';
 
 // Rich, realistic transaction activity database with comprehensive risk metadata
 export const INITIAL_TRANSACTIONS: FullTransactionActivity[] = [
@@ -58,7 +59,7 @@ export const INITIAL_TRANSACTIONS: FullTransactionActivity[] = [
       threatIndicators: [],
       routeReliabilityPercent: 99.9,
       mempoolFeeRateSatVb: 12,
-      nodeAttribution: 'SATCONNECT-HYD-ROUTING-NODE-01',
+      nodeAttribution: 'SATDCX-HYD-ROUTING-NODE-01',
     },
   },
   {
@@ -167,7 +168,7 @@ export const INITIAL_TRANSACTIONS: FullTransactionActivity[] = [
     subType: 'DCA Stacking Pool',
     status: 'Confirmed',
     recipientOrSender: 'Automated Daily Bitcoin Vault',
-    handleOrAddress: 'vault-savings@satconnect.me',
+    handleOrAddress: 'vault-savings@satdcx.me',
     amountInr: 1000.00,
     amountSats: 11915,
     feeInr: 0.34,
@@ -222,7 +223,7 @@ export const INITIAL_TRANSACTIONS: FullTransactionActivity[] = [
         'Transaction value exceeds daily retail median (₹5,000)',
       ],
       routeReliabilityPercent: 96.5,
-      nodeAttribution: 'SATCONNECT-MUM-GATEWAY',
+      nodeAttribution: 'SATDCX-MUM-GATEWAY',
     },
   },
   {
@@ -267,6 +268,23 @@ export const TransactionHistorySection: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<'All' | TxActivityStatus>('All');
   const [riskFilter, setRiskFilter] = useState<'All' | TxRiskLevel>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  // Perceived performance simulation on initial mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
 
   // Filtered transactions
   const filteredTransactions = useMemo(() => {
@@ -347,6 +365,17 @@ export const TransactionHistorySection: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              id="refresh-transactions-btn"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-bold transition-all cursor-pointer disabled:opacity-50"
+              title="Refresh ledger telemetry"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-blue-600' : ''}`} />
+              <span>{isRefreshing ? 'Syncing...' : 'Sync Feed'}</span>
+            </button>
+
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono font-bold">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>AI FIREWALL: 100% ACTIVE</span>
@@ -355,63 +384,72 @@ export const TransactionHistorySection: React.FC = () => {
         </div>
 
         {/* 4 KPI Summary Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* KPI 1: Inflow */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
-              <span>Total Received</span>
-              <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div className="text-lg font-bold font-mono text-emerald-600">
-              +₹{stats.inflowInr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </div>
-            <div className="text-[11px] font-mono text-slate-400">
-              {stats.inflowSats.toLocaleString()} Sats
-            </div>
+        {isLoading || isRefreshing ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <SkeletonMetricCard />
+            <SkeletonMetricCard />
+            <SkeletonMetricCard />
+            <SkeletonMetricCard />
           </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* KPI 1: Inflow */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
+                <span>Total Received</span>
+                <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="text-lg font-bold font-mono text-emerald-600">
+                +₹{stats.inflowInr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              </div>
+              <div className="text-[11px] font-mono text-slate-400">
+                {stats.inflowSats.toLocaleString()} Sats
+              </div>
+            </div>
 
-          {/* KPI 2: Outflow */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
-              <span>Total Settled / Sent</span>
-              <ArrowUpRight className="w-4 h-4 text-blue-600" />
+            {/* KPI 2: Outflow */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
+                <span>Total Settled / Sent</span>
+                <ArrowUpRight className="w-4 h-4 text-blue-600" />
+              </div>
+              <div className="text-lg font-bold font-mono text-slate-900">
+                -₹{stats.outflowInr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              </div>
+              <div className="text-[11px] font-mono text-slate-400">
+                {stats.outflowSats.toLocaleString()} Sats
+              </div>
             </div>
-            <div className="text-lg font-bold font-mono text-slate-900">
-              -₹{stats.outflowInr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            </div>
-            <div className="text-[11px] font-mono text-slate-400">
-              {stats.outflowSats.toLocaleString()} Sats
-            </div>
-          </div>
 
-          {/* KPI 3: Avg Risk Score */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
-              <span>Ledger Health Score</span>
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
+            {/* KPI 3: Avg Risk Score */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
+                <span>Ledger Health Score</span>
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+              </div>
+              <div className="text-lg font-bold font-mono text-slate-900">
+                {100 - stats.avgRisk}/100
+              </div>
+              <div className="text-[11px] font-mono text-emerald-600 font-semibold">
+                Low Cumulative Threat Profile
+              </div>
             </div>
-            <div className="text-lg font-bold font-mono text-slate-900">
-              {100 - stats.avgRisk}/100
-            </div>
-            <div className="text-[11px] font-mono text-emerald-600 font-semibold">
-              Low Cumulative Threat Profile
-            </div>
-          </div>
 
-          {/* KPI 4: Interceptions */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
-              <span>Threats Intercepted</span>
-              <ShieldAlert className="w-4 h-4 text-rose-600" />
-            </div>
-            <div className="text-lg font-bold font-mono text-rose-600">
-              {stats.highRiskCount} Blocked
-            </div>
-            <div className="text-[11px] font-mono text-slate-500">
-              100% Funds Protected
+            {/* KPI 4: Interceptions */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1">
+                <span>Threats Intercepted</span>
+                <ShieldAlert className="w-4 h-4 text-rose-600" />
+              </div>
+              <div className="text-lg font-bold font-mono text-rose-600">
+                {stats.highRiskCount} Blocked
+              </div>
+              <div className="text-[11px] font-mono text-slate-500">
+                100% Funds Protected
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* 2. Interactive Filter & Search Controls */}
         <div className="pt-2 border-t border-slate-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
@@ -522,7 +560,15 @@ export const TransactionHistorySection: React.FC = () => {
           )}
         </div>
 
-        {filteredTransactions.length === 0 ? (
+        {isLoading || isRefreshing ? (
+          <div className="divide-y divide-slate-100">
+            <SkeletonTransactionRow />
+            <SkeletonTransactionRow />
+            <SkeletonTransactionRow />
+            <SkeletonTransactionRow />
+            <SkeletonTransactionRow />
+          </div>
+        ) : filteredTransactions.length === 0 ? (
           <div className="p-12 text-center space-y-3">
             <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
               <Search className="w-6 h-6" />

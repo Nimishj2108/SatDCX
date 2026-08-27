@@ -3,14 +3,12 @@ import {
   TrendingUp, 
   TrendingDown, 
   Zap, 
-  Activity, 
-  Layers, 
-  Cpu, 
   Flame, 
   ShieldCheck,
-  RefreshCw
+  RefreshCw,
+  Clock
 } from 'lucide-react';
-import { subscribeToLiveMarketData, LiveMarketData } from '../services/livePriceService';
+import { subscribeToLiveMarketData, LiveMarketData, formatTimeAgo } from '../services/livePriceService';
 
 export const LivePriceTicker: React.FC = () => {
   const [market, setMarket] = useState<LiveMarketData | null>(null);
@@ -21,7 +19,8 @@ export const LivePriceTicker: React.FC = () => {
     const unsubscribe = subscribeToLiveMarketData((data) => {
       if (lastPrice > 0 && data.btcInr !== lastPrice) {
         setPriceFlash(data.btcInr > lastPrice ? 'up' : 'down');
-        setTimeout(() => setPriceFlash(null), 800);
+        const timer = setTimeout(() => setPriceFlash(null), 800);
+        return () => clearTimeout(timer);
       }
       lastPrice = data.btcInr;
       setMarket(data);
@@ -30,13 +29,29 @@ export const LivePriceTicker: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  if (!market) return null;
+  // Subtle loading skeleton on very first load before any data arrives
+  if (!market) {
+    return (
+      <div className="bg-[#0b1e48] text-slate-400 text-xs py-1.5 px-4 border-b border-blue-950 flex items-center justify-between shadow-inner">
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-6 font-mono text-[11px] animate-pulse">
+          <div className="flex items-center gap-4">
+            <div className="h-3 w-28 bg-blue-900/60 rounded" />
+            <div className="h-3 w-20 bg-blue-900/60 rounded" />
+            <div className="h-3 w-24 bg-blue-900/60 rounded" />
+          </div>
+          <div className="h-3 w-32 bg-blue-900/60 rounded" />
+        </div>
+      </div>
+    );
+  }
+
+  const timeAgoText = formatTimeAgo(market.secondsAgo);
 
   return (
     <div className="bg-[#0b1e48] text-slate-200 text-xs py-1.5 px-4 border-b border-blue-950 overflow-x-auto whitespace-nowrap scrollbar-none flex items-center justify-between shadow-inner">
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-6 font-mono text-[11px]">
         {/* Left Side: Real-time Live Tickers */}
-        <div className="flex items-center gap-5 sm:gap-7">
+        <div className="flex items-center gap-4 sm:gap-6">
           {/* BTC / INR Live Price with Flash Animation */}
           <div className="flex items-center gap-1.5">
             <span className="text-slate-400 font-semibold">BTC/INR:</span>
@@ -65,8 +80,26 @@ export const LivePriceTicker: React.FC = () => {
             </span>
           </div>
 
+          {/* BTC / USD Live Price */}
+          <div className="hidden sm:flex items-center gap-1.5">
+            <span className="text-slate-400 font-semibold">BTC/USD:</span>
+            <span className="font-bold text-slate-200">
+              ${market.btcUsd.toLocaleString('en-US')}
+            </span>
+          </div>
+
+          {/* USD / INR Live FX */}
+          {(market.usdInr || market.fiatToInr?.USD) && (
+            <div className="hidden md:flex items-center gap-1.5">
+              <span className="text-slate-400 font-semibold">USD/INR:</span>
+              <span className="font-bold text-amber-300">
+                ₹{(market.usdInr || market.fiatToInr?.USD || 87.40).toFixed(2)}
+              </span>
+            </div>
+          )}
+
           {/* Volatility Index */}
-          <div className="flex items-center gap-1.5">
+          <div className="hidden lg:flex items-center gap-1.5">
             <span className="text-slate-400">VOLATILITY:</span>
             <span className="font-bold text-amber-300">{market.volatilityIndex}%</span>
             <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-medium">
@@ -76,37 +109,41 @@ export const LivePriceTicker: React.FC = () => {
 
           {/* Mempool Gas Rate */}
           <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">MEMPOOL GAS:</span>
+            <span className="text-slate-400">GAS:</span>
             <span className="font-bold text-orange-400 flex items-center gap-1">
               <Flame className="w-3 h-3 text-orange-400" />
               {market.mempoolGasSatVb} sat/vB
             </span>
-            <span className="text-slate-400 text-[10px]">
-              (~{market.mempoolBlockWaitMinutes}m block)
-            </span>
           </div>
 
-          {/* Block Height & Active TPS */}
-          <div className="hidden md:flex items-center gap-1.5">
+          {/* Block Height */}
+          <div className="hidden xl:flex items-center gap-1.5">
             <span className="text-slate-400">BLOCK:</span>
             <span className="font-bold text-cyan-300">#{market.blockHeight}</span>
-            <span className="text-slate-500">•</span>
-            <span className="text-slate-400">SPEED:</span>
-            <span className="font-bold text-white">{market.activeTxPerSecond} tx/s</span>
           </div>
         </div>
 
-        {/* Right Side: Status Tag */}
-        <div className="hidden lg:flex items-center gap-4 text-[11px] font-mono text-slate-300">
-          <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Live Mainnet &amp; Lightning Mesh
-          </span>
-          <span className="text-slate-600">|</span>
-          <span className="text-cyan-300 flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            100% Non-Custodial
-          </span>
+        {/* Right Side: Status Tag & Live Update Timer */}
+        <div className="flex items-center gap-3 text-[11px] font-mono text-slate-300 shrink-0">
+          {/* Last updated Xs ago badge */}
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-900/40 border border-blue-800/60 text-slate-300 text-[10px]">
+            <Clock className="w-2.5 h-2.5 text-orange-400" />
+            <span className="text-slate-400">Updated:</span>
+            <span className="font-bold text-white">{timeAgoText}</span>
+          </div>
+
+          {/* Live Node Status */}
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="flex items-center gap-1 text-emerald-400 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Live Feed
+            </span>
+            <span className="text-slate-600">|</span>
+            <span className="text-cyan-300 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3" />
+              Sovereign
+            </span>
+          </div>
         </div>
       </div>
     </div>

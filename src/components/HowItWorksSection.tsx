@@ -28,7 +28,7 @@ export const HowItWorksSection: React.FC = () => {
     {
       num: '03',
       title: 'Send or Receive',
-      desc: 'SATCONNECT automatically resolves recipient protocols, currencies, and addresses.',
+      desc: 'SAT DCX automatically resolves recipient protocols, currencies, and addresses.',
       icon: ArrowRight,
       color: 'from-indigo-400 to-purple-500',
     },
@@ -62,13 +62,13 @@ export const HowItWorksSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-cyan-500/30 text-xs font-mono text-cyan-400 mb-4 font-semibold shadow-sm">
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>HOW SATCONNECT WORKS</span>
+            <span>HOW SAT DCX WORKS</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Six Simple Steps to Sovereign Simplicity.
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            From registration to automated route optimization and security telemetry, SATCONNECT orchestrates the entire lifecycle while keeping you in 100% control of your private keys.
+            From registration to automated route optimization and security telemetry, SAT DCX orchestrates the entire lifecycle while keeping you in 100% control of your private keys.
           </p>
         </div>
 

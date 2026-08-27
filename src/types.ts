@@ -275,7 +275,8 @@ export interface SlideData {
   }[];
   statComparison?: {
     metric: string;
-    satconnectValue: string;
+    satdcxValue: string;
+    satconnectValue?: string;
     legacyValue: string;
     insight: string;
   };

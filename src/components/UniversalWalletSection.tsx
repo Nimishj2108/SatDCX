@@ -29,7 +29,7 @@ export const UniversalWalletSection: React.FC = () => {
         handle: handle.startsWith('@') ? handle : `@${handle}`,
         name: 'Custom Resolved Sovereign Peer',
         avatar: 'CP',
-        lightningAddress: `${handle.replace('@', '')}@satconnect.me`,
+        lightningAddress: `${handle.replace('@', '')}@satdcx.me`,
         nodePubkey: '02aa77bb88cc99dd00ee11ff2233445566778899aabbccddeeff001122334455',
         supportedProtocols: ['BOLT 11', 'BOLT 12', 'LNURL-Pay'],
         preferredCurrency: 'INR (₹)',
@@ -55,7 +55,7 @@ export const UniversalWalletSection: React.FC = () => {
             One Sovereign Identity. <span className="text-blue-600">Any Bitcoin Wallet.</span>
           </h2>
           <p className="mt-3 text-base text-slate-600 leading-relaxed">
-            Different users hold different mobile and hardware Bitcoin wallets. SATCONNECT provides a unified sovereign handle layer that routes directly to your self-custodial node with zero intermediary lock-in.
+            Different users hold different mobile and hardware Bitcoin wallets. SAT DCX provides a unified sovereign handle layer that routes directly to your self-custodial node with zero intermediary lock-in.
           </p>
         </div>
 
@@ -179,7 +179,7 @@ export const UniversalWalletSection: React.FC = () => {
                 <div>
                   <h4 className="text-xs font-bold text-slate-900">LNURL-Pay &amp; LNURL-Withdraw</h4>
                   <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    Standard human-readable identifiers like <em>handle@satconnect.me</em> across any client.
+                    Standard human-readable identifiers like <em>handle@satdcx.me</em> across any client.
                   </p>
                 </div>
               </div>

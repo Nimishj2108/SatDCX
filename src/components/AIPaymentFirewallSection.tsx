@@ -45,7 +45,7 @@ export const AIPaymentFirewallSection: React.FC = () => {
             Behavioral Anomaly Detection. <span className="text-emerald-600">Zero-Compromise Security.</span>
           </h2>
           <p className="mt-3 text-base text-slate-600 leading-relaxed">
-            Unlike static blocklists, SATCONNECT AI evaluates behavioral context: transaction size deviations, unfamiliar recipient nodes, time anomalies, and graph provenance before cryptographic signature.
+            Unlike static blocklists, SAT DCX AI evaluates behavioral context: transaction size deviations, unfamiliar recipient nodes, time anomalies, and graph provenance before cryptographic signature.
           </p>
         </div>
 

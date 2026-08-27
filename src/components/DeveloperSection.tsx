@@ -7,9 +7,9 @@ export const DeveloperSection: React.FC = () => {
 
   const codeSnippets = {
     resolve: `// Resolve Universal Handle into Sovereign Payment Endpoints
-import { SatConnectClient } from '@satconnect/sdk';
+import { SatDcxClient } from '@satdcx/sdk';
 
-const sat = new SatConnectClient({ apiKey: process.env.SATCONNECT_KEY });
+const sat = new SatDcxClient({ apiKey: process.env.SATDCX_KEY });
 
 const identity = await sat.identity.resolve('@satya_dev');
 console.log(identity);

@@ -46,7 +46,7 @@ export const DustGuardSection: React.FC = () => {
             Stop Toxic UTXO Bloat. <span className="text-orange-500">Club Bitcoin Dust.</span>
           </h2>
           <p className="mt-3 text-base text-slate-600 leading-relaxed">
-            When you pay small fiat amounts like ₹50 or ₹150 in India, micro-change outputs produce un-spendable Bitcoin dust (&lt;546 sats). SATCONNECT sweeps extra micro-charges into your sovereign <strong>Dustbin</strong> and clubs them using Lightning Route Intelligence.
+            When you pay small fiat amounts like ₹50 or ₹150 in India, micro-change outputs produce un-spendable Bitcoin dust (&lt;546 sats). SAT DCX sweeps extra micro-charges into your sovereign <strong>Dustbin</strong> and clubs them using Lightning Route Intelligence.
           </p>
         </div>
 

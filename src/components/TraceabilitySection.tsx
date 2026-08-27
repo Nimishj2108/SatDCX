@@ -30,7 +30,7 @@ export const TraceabilitySection: React.FC = () => {
             <span className="text-emerald-400">Provenance Verified.</span>
           </h2>
           <p className="mt-4 text-base text-slate-400 leading-relaxed">
-            Every satoshi carries a cryptographic history. SATCONNECT builds an explainable provenance graph to verify counterparty cleanliness, identify malicious taint, and ensure compliant settlement without compromising user privacy.
+            Every satoshi carries a cryptographic history. SAT DCX builds an explainable provenance graph to verify counterparty cleanliness, identify malicious taint, and ensure compliant settlement without compromising user privacy.
           </p>
         </div>
 
