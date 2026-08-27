@@ -38,7 +38,7 @@ export const PaySettlePage: React.FC<PaySettlePageProps> = ({ user }) => {
   // Send form inputs
   const [recipientHandleOrAddress, setRecipientHandleOrAddress] = useState('sharmastore@okhdfcbank');
   const [sendAmountInr, setSendAmountInr] = useState<number>(200);
-  const marketRate = liveRates.btcInr || 8552190;
+  const marketRate = liveRates.btcInr || 7668119.70;
   
   // Selected route option
   const [selectedRoute, setSelectedRoute] = useState<'channel_a' | 'channel_b' | 'channel_c'>('channel_a');

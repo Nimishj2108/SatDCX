@@ -32,11 +32,11 @@ export interface LiveMarketData {
 }
 
 const DEFAULT_MARKET_DATA: LiveMarketData = {
-  btcInr: 7631448.61,
-  btcUsd: 87466.46,
-  usdInr: 87.25,
-  change24hPercent: +2.18,
-  change24hUsdPercent: +2.15,
+  btcInr: 7668119.70,
+  btcUsd: 80260.83,
+  usdInr: 95.54,
+  change24hPercent: +1.45,
+  change24hUsdPercent: +1.42,
   volatilityIndex: 3.42,
   volatilityLabel: 'Moderate',
   mempoolGasSatVb: 12,
@@ -44,18 +44,18 @@ const DEFAULT_MARKET_DATA: LiveMarketData = {
   blockHeight: 896420,
   activeTxPerSecond: 7.8,
   fiatToInr: {
-    USD: 87.25,
-    EUR: 94.32,
-    GBP: 111.57,
-    JPY: 0.572,
-    CAD: 63.31,
-    AUD: 56.87,
-    SGD: 65.06,
-    AED: 23.75,
+    USD: 95.54,
+    EUR: 103.29,
+    GBP: 122.17,
+    JPY: 0.627,
+    CAD: 69.33,
+    AUD: 62.28,
+    SGD: 71.25,
+    AED: 26.01,
     INR: 1.0,
   },
   fiatRates: {
-    INR: 87.25,
+    INR: 95.54,
     EUR: 0.925,
     GBP: 0.782,
     JPY: 152.4,
@@ -64,8 +64,8 @@ const DEFAULT_MARKET_DATA: LiveMarketData = {
     SGD: 1.341,
     AED: 3.673,
   },
-  satsPerInr: 13.10,
-  inrPerSat: 0.07631,
+  satsPerInr: 13.04,
+  inrPerSat: 0.07668,
   lastUpdated: new Date(),
   secondsAgo: 0,
   status: 'live',
@@ -98,7 +98,7 @@ export async function fetchLiveRatesFromApi(): Promise<void> {
       if (data) {
         const inr = Number(data.btcInr || data.bitcoin?.inr) || currentData.btcInr;
         const usd = Number(data.btcUsd || data.bitcoin?.usd) || currentData.btcUsd;
-        const usdInr = Number(data.usdInr || (usd > 0 ? (inr / usd).toFixed(2) : 87.40)) || currentData.usdInr;
+        const usdInr = Number(data.usdInr || (usd > 0 ? (inr / usd).toFixed(2) : 95.54)) || currentData.usdInr;
         
         const inrChange = typeof data.btc24hChangeInr === 'number'
           ? Number(data.btc24hChangeInr.toFixed(2))
@@ -230,7 +230,7 @@ export function useLiveRates(): LiveMarketData {
  */
 export function convertForeignToInr(amount: number, currencyCode: string, rates?: Record<string, number>): number {
   const map = rates || currentData.fiatToInr;
-  const rate = map[currencyCode.toUpperCase()] || map.USD || 87.25;
+  const rate = map[currencyCode.toUpperCase()] || map.USD || 95.54;
   return amount * rate;
 }
 
@@ -238,7 +238,7 @@ export function convertForeignToInr(amount: number, currencyCode: string, rates?
  * Helper to convert INR to Satoshis using live Bitcoin price
  */
 export function inrToSatoshis(inrAmount: number, btcInrRate?: number): number {
-  const rate = btcInrRate || currentData.btcInr || 7631448.61;
+  const rate = btcInrRate || currentData.btcInr || 7668119.70;
   return Math.round((inrAmount / rate) * 100000000);
 }
 
@@ -246,7 +246,7 @@ export function inrToSatoshis(inrAmount: number, btcInrRate?: number): number {
  * Helper to convert Satoshis to INR using live Bitcoin price
  */
 export function satoshisToInr(satsAmount: number, btcInrRate?: number): number {
-  const rate = btcInrRate || currentData.btcInr || 7631448.61;
+  const rate = btcInrRate || currentData.btcInr || 7668119.70;
   return (satsAmount / 100000000) * rate;
 }
 

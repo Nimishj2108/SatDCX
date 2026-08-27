@@ -62,7 +62,7 @@ export const BitcoinWalletUIModal: React.FC<BitcoinWalletUIModalProps> = ({
 
   // Keypad & Amount State
   const [enteredSatsStr, setEnteredSatsStr] = useState<string>('0');
-  const marketBtcInr = liveRates.btcInr || 8552190;
+  const marketBtcInr = liveRates.btcInr || 7668119.70;
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [depositAddress, setDepositAddress] = useState('bc1q8x9y7z2k4p8m0n2q9w3e5r7t9y1u3i5o7p9a');
   

@@ -71,7 +71,7 @@ export const ForeignerTravelerModal: React.FC<ForeignerTravelerModalProps> = ({
 
   // 5. Trip Budget & Satoshi Recommendation
   const [travelStyle, setTravelStyle] = useState<'budget' | 'mid' | 'luxury'>('mid');
-  const marketRateBtcInr = liveRates.btcInr || 8552190;
+  const marketRateBtcInr = liveRates.btcInr || 7668119.70;
   const liveFiatRateToInr = liveRates.fiatToInr[selectedCountry.currencyCode] || selectedCountry.exchangeRateToInr;
   const [satsPurchased, setSatsPurchased] = useState<number>(0);
   const [isBuyingSats, setIsBuyingSats] = useState(false);

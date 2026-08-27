@@ -25,7 +25,7 @@ import { SkeletonDustGuard } from '../common/ShimmerSkeleton';
 
 export const DustGuardPage: React.FC = () => {
   const liveRates = useLiveRates();
-  const marketRate = liveRates.btcInr || 8552190;
+  const marketRate = liveRates.btcInr || 7668119.70;
   const [inputInr, setInputInr] = useState<number>(150);
   const [autoDepositDustbin, setAutoDepositDustbin] = useState<boolean>(true);
   const [isClubbingProcessing, setIsClubbingProcessing] = useState<boolean>(false);

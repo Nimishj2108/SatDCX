@@ -93,7 +93,7 @@ export const LivePriceTicker: React.FC = () => {
             <div className="hidden md:flex items-center gap-1.5">
               <span className="text-slate-400 font-semibold">USD/INR:</span>
               <span className="font-bold text-amber-300">
-                ₹{(market.usdInr || market.fiatToInr?.USD || 87.40).toFixed(2)}
+                ₹{(market.usdInr || market.fiatToInr?.USD || 95.54).toFixed(2)}
               </span>
             </div>
           )}
